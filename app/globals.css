@@ -1,0 +1,407 @@
+/* ========================================
+   혜로로 - Global CSS
+   ======================================== */
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+}
+
+html {
+  background: #05070b;
+}
+
+body {
+  background: #05070b;
+  color: #f5f5f5;
+  font-family:
+    Arial,
+    "Noto Sans KR",
+    sans-serif;
+}
+
+/* 링크 */
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+
+/* ========================================
+   전체 사이트
+   ======================================== */
+
+.site-wrapper {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #05070b;
+}
+
+
+/* ========================================
+   헤더
+   ======================================== */
+
+.site-header {
+  width: 100%;
+  background: #080b10;
+  color: white;
+  border-bottom: 1px solid #252a32;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.35);
+}
+
+.header-inner {
+  max-width: 1200px;
+  min-height: 70px;
+  margin: 0 auto;
+  padding: 0 24px;
+
+  display: flex;
+  align-items: center;
+  gap: 40px;
+}
+
+
+/* ========================================
+   로고
+   ======================================== */
+
+.logo {
+  color: #ffffff;
+  font-size: 25px;
+  font-weight: 800;
+  white-space: nowrap;
+  transition: opacity 0.2s;
+}
+
+.logo:hover {
+  opacity: 0.85;
+}
+
+
+/* ========================================
+   메인 메뉴
+   ======================================== */
+
+.main-nav {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  flex: 1;
+}
+
+.main-nav a {
+  position: relative;
+
+  color: #aeb4bd;
+  font-size: 15px;
+  font-weight: 600;
+
+  transition:
+    color 0.2s,
+    transform 0.2s;
+}
+
+.main-nav a:hover {
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+
+/* ========================================
+   사용자 영역
+   ======================================== */
+
+.header-user {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  white-space: nowrap;
+}
+
+
+/* 미네랄 */
+
+.mineral {
+  color: #4fd1c5;
+  font-weight: 700;
+  font-size: 15px;
+}
+
+
+/* 사용자 이름 */
+
+.user-name {
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.user-name:hover {
+  color: #ffd84d;
+}
+
+
+/* ========================================
+   메인 영역
+   ======================================== */
+
+.site-main {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 24px;
+
+  flex: 1;
+}
+
+
+/* ========================================
+   공통 카드
+   ======================================== */
+
+.card {
+  background: #0b0f15;
+  border: 1px solid #252b34;
+  border-radius: 12px;
+  box-shadow:
+    0 8px 30px rgba(0, 0, 0, 0.25);
+}
+
+
+/* ========================================
+   버튼
+   ======================================== */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 40px;
+  padding: 0 16px;
+
+  border: 1px solid #d6a928;
+  border-radius: 8px;
+
+  background: #d6a928;
+  color: #111111;
+
+  font-size: 14px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s,
+    border-color 0.2s,
+    transform 0.2s;
+}
+
+.btn:hover {
+  background: #f0c43d;
+  border-color: #f0c43d;
+  transform: translateY(-1px);
+}
+
+
+/* 보조 버튼 */
+
+.btn.secondary {
+  background: #11161e;
+  border-color: #343b46;
+  color: #d9dde3;
+}
+
+.btn.secondary:hover {
+  background: #171d26;
+  border-color: #555e6c;
+  color: #ffffff;
+}
+
+
+/* ========================================
+   입력창
+   ======================================== */
+
+input,
+textarea,
+select {
+  font-family: inherit;
+}
+
+input,
+textarea,
+select {
+  background: #0d1219;
+  color: #f5f5f5;
+  border: 1px solid #303743;
+  border-radius: 8px;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  border-color: #d6a928;
+  box-shadow: 0 0 0 2px rgba(214, 169, 40, 0.12);
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: #6f7782;
+}
+
+
+/* ========================================
+   제목
+   ======================================== */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: #ffffff;
+}
+
+h1 {
+  letter-spacing: -0.5px;
+}
+
+
+/* ========================================
+   구분선
+   ======================================== */
+
+hr {
+  border: 0;
+  border-top: 1px solid #252b34;
+}
+
+
+/* ========================================
+   푸터
+   ======================================== */
+
+.site-footer {
+  width: 100%;
+  background: #080b10;
+  color: #777f8b;
+  border-top: 1px solid #252a32;
+}
+
+.footer-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 30px 24px;
+  text-align: center;
+}
+
+.footer-inner strong {
+  color: #ffffff;
+  font-size: 18px;
+}
+
+.footer-inner p {
+  margin: 8px 0;
+  font-size: 13px;
+}
+
+
+/* ========================================
+   스크롤바
+   ======================================== */
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #070a0f;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #303640;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #454d59;
+}
+
+
+/* ========================================
+   모바일
+   ======================================== */
+
+@media (max-width: 768px) {
+  .header-inner {
+    min-height: auto;
+    padding: 16px 20px;
+
+    flex-wrap: wrap;
+    gap: 18px;
+  }
+
+  .main-nav {
+    order: 3;
+
+    width: 100%;
+
+    gap: 18px;
+
+    overflow-x: auto;
+
+    padding-bottom: 2px;
+  }
+
+  .main-nav a {
+    white-space: nowrap;
+  }
+
+  .header-user {
+    margin-left: auto;
+  }
+
+  .site-main {
+    padding: 24px 16px;
+  }
+}
+
+
+/* ========================================
+   작은 화면
+   ======================================== */
+
+@media (max-width: 480px) {
+  .header-inner {
+    padding: 14px 16px;
+  }
+
+  .logo {
+    font-size: 22px;
+  }
+
+  .header-user {
+    gap: 10px;
+  }
+
+  .mineral {
+    font-size: 14px;
+  }
+
+  .site-main {
+    padding: 20px 12px;
+  }
+}

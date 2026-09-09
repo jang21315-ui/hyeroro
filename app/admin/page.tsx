@@ -1,0 +1,5 @@
+import {createClient} from "@/lib/supabase/server";
+export default async function Admin(){const s=await createClient();const{data:{user}}=await s.auth.getUser();if(!user)return <main className="wrap"><div className="card"><h1>관리자</h1><p>로그인이 필요합니다.</p></div></main>;
+const{data:profile}=await s.from("profiles").select("role").eq("id",user.id).single();if(profile?.role!=="admin")return <main className="wrap"><div className="card"><h1>접근 거부</h1><p>관리자 권한이 필요합니다.</p></div></main>;
+const{count:users}=await s.from("profiles").select("*",{count:"exact",head:true});const{count:posts}=await s.from("posts").select("*",{count:"exact",head:true});
+return <main className="wrap"><div className="card"><h1>⚙️ 관리자</h1><div className="grid4"><div className="tile"><b>{users??0}</b><br/>회원</div><div className="tile"><b>{posts??0}</b><br/>게시글</div><div className="tile">미네랄 지급/차감</div><div className="tile">상점 관리</div></div><p className="muted">민감한 관리자 작업은 서버 측에서 처리하도록 구성하세요.</p></div></main>}

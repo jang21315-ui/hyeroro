@@ -1,0 +1,530 @@
+import Link from "next/link";
+import { notFound, redirect } from "next/navigation";
+import { createClient } from "@/lib/supabase/server";
+
+type PageProps = {
+  params: Promise<{
+    id: string;
+  }>;
+};
+
+export default async function EditPostPage({
+  params,
+}: PageProps) {
+  const { id } = await params;
+
+  const supabase = await createClient();
+
+  // 로그인 확인
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    redirect("/auth");
+  }
+
+  // 게시글 조회
+  const { data: post, error } = await supabase
+    .from("posts")
+    .select(`
+      id,
+      user_id,
+      title,
+      content,
+      created_at,
+      updated_at
+    `)
+    .eq("id", id)
+    .single();
+
+  if (error || !post) {
+    notFound();
+  }
+
+  // 작성자 본인인지 확인
+  if (post.user_id !== user.id) {
+    redirect(`/board/${post.id}`);
+  }
+
+  async function updatePost(formData: FormData) {
+    "use server";
+
+    const supabase = await createClient();
+
+    // 로그인 확인
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+      redirect("/auth");
+    }
+
+    const title = String(
+      formData.get("title") ?? ""
+    ).trim();
+
+    const content = String(
+      formData.get("content") ?? ""
+    ).trim();
+
+    // 제목 검사
+    if (!title) {
+      redirect(`/board/${id}/edit?error=title`);
+    }
+
+    if (title.length > 100) {
+      redirect(`/board/${id}/edit?error=title_length`);
+    }
+
+    // 본문 검사
+    if (!content) {
+      redirect(`/board/${id}/edit?error=content`);
+    }
+
+    if (content.length > 10000) {
+      redirect(`/board/${id}/edit?error=content_length`);
+    }
+
+    // 본인 글인지 다시 확인
+    const { data: currentPost, error: postError } =
+      await supabase
+        .from("posts")
+        .select("id, user_id")
+        .eq("id", id)
+        .single();
+
+    if (
+      postError ||
+      !currentPost ||
+      currentPost.user_id !== user.id
+    ) {
+      redirect(`/board/${id}`);
+    }
+
+    // 게시글 수정
+    const { error: updateError } = await supabase
+      .from("posts")
+      .update({
+        title,
+        content,
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", id)
+      .eq("user_id", user.id);
+
+    if (updateError) {
+      console.error(
+        "Post Update Error:",
+        updateError
+      );
+
+      redirect(`/board/${id}/edit?error=failed`);
+    }
+
+    // 수정 완료 후 상세 페이지
+    redirect(`/board/${id}`);
+  }
+
+  return (
+    <main className="edit-page">
+
+      <style>{`
+        .edit-page {
+          width: 100%;
+          max-width: 900px;
+          margin: 0 auto;
+        }
+
+        /* =========================
+           상단
+        ========================= */
+
+        .edit-header {
+          margin-bottom: 20px;
+        }
+
+        .edit-title {
+          margin: 0;
+
+          color: #ffffff;
+
+          font-size: 28px;
+          font-weight: 900;
+
+          letter-spacing: -1px;
+        }
+
+        .edit-description {
+          margin: 8px 0 0;
+
+          color: #737c88;
+
+          font-size: 13px;
+        }
+
+        /* =========================
+           카드
+        ========================= */
+
+        .edit-card {
+          overflow: hidden;
+
+          border: 1px solid #2a3039;
+          border-radius: 12px;
+
+          background: #0b0f15;
+
+          box-shadow:
+            0 10px 35px rgba(0, 0, 0, 0.25);
+        }
+
+        .edit-form {
+          padding: 30px;
+        }
+
+        /* =========================
+           입력
+        ========================= */
+
+        .form-group {
+          margin-bottom: 22px;
+        }
+
+        .form-group:last-child {
+          margin-bottom: 0;
+        }
+
+        .form-label {
+          display: block;
+
+          margin-bottom: 9px;
+
+          color: #dfe3e8;
+
+          font-size: 13px;
+          font-weight: 800;
+        }
+
+        .required {
+          margin-left: 3px;
+
+          color: #d6a928;
+        }
+
+        .title-input {
+          display: block;
+
+          width: 100%;
+          height: 48px;
+
+          padding: 0 14px;
+
+          border: 1px solid #303743;
+          border-radius: 8px;
+
+          background: #0d1219;
+          color: #ffffff;
+
+          font-family: inherit;
+          font-size: 14px;
+
+          outline: none;
+
+          transition:
+            border-color 0.2s,
+            box-shadow 0.2s;
+        }
+
+        .title-input:focus {
+          border-color: #d6a928;
+
+          box-shadow:
+            0 0 0 2px
+            rgba(214, 169, 40, 0.12);
+        }
+
+        .content-input {
+          display: block;
+
+          width: 100%;
+          min-height: 360px;
+
+          padding: 14px;
+
+          border: 1px solid #303743;
+          border-radius: 8px;
+
+          background: #0d1219;
+          color: #f5f5f5;
+
+          font-family: inherit;
+          font-size: 14px;
+
+          line-height: 1.8;
+
+          resize: vertical;
+          outline: none;
+
+          transition:
+            border-color 0.2s,
+            box-shadow 0.2s;
+        }
+
+        .content-input:focus {
+          border-color: #d6a928;
+
+          box-shadow:
+            0 0 0 2px
+            rgba(214, 169, 40, 0.12);
+        }
+
+        .form-help {
+          display: flex;
+          justify-content: space-between;
+
+          margin-top: 8px;
+
+          color: #626b76;
+
+          font-size: 11px;
+        }
+
+        /* =========================
+           버튼
+        ========================= */
+
+        .form-actions {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+
+          margin-top: 28px;
+          padding-top: 20px;
+
+          border-top: 1px solid #252b34;
+        }
+
+        .left-actions {
+          display: flex;
+          gap: 8px;
+        }
+
+        .cancel-button {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+
+          min-height: 42px;
+          padding: 0 16px;
+
+          border: 1px solid #343b46;
+          border-radius: 7px;
+
+          background: #11161e;
+          color: #b9c0c9;
+
+          font-size: 12px;
+          font-weight: 700;
+        }
+
+        .cancel-button:hover {
+          background: #171d26;
+          color: #ffffff;
+        }
+
+        .submit-button {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+
+          min-width: 100px;
+          min-height: 42px;
+
+          padding: 0 18px;
+
+          border: 1px solid #d6a928;
+          border-radius: 7px;
+
+          background: #d6a928;
+          color: #111111;
+
+          font-family: inherit;
+          font-size: 12px;
+          font-weight: 900;
+
+          cursor: pointer;
+        }
+
+        .submit-button:hover {
+          background: #f0c43d;
+        }
+
+        .edit-tip {
+          margin-top: 16px;
+
+          color: #626b76;
+
+          font-size: 11px;
+        }
+
+        @media (max-width: 600px) {
+
+          .edit-title {
+            font-size: 23px;
+          }
+
+          .edit-form {
+            padding: 20px 18px;
+          }
+
+          .content-input {
+            min-height: 280px;
+          }
+
+          .form-actions {
+            gap: 10px;
+          }
+
+          .cancel-button,
+          .submit-button {
+            flex: 1;
+          }
+        }
+      `}</style>
+
+
+      {/* 상단 */}
+
+      <div className="edit-header">
+
+        <h1 className="edit-title">
+          ✏️ 게시글 수정
+        </h1>
+
+        <p className="edit-description">
+          작성한 게시글의 내용을 수정할 수 있습니다.
+        </p>
+
+      </div>
+
+
+      {/* 수정 카드 */}
+
+      <div className="edit-card">
+
+        <form
+          action={updatePost}
+          className="edit-form"
+        >
+
+          {/* 제목 */}
+
+          <div className="form-group">
+
+            <label
+              htmlFor="title"
+              className="form-label"
+            >
+              제목
+              <span className="required">
+                *
+              </span>
+            </label>
+
+            <input
+              id="title"
+              name="title"
+              type="text"
+              defaultValue={post.title}
+              maxLength={100}
+              required
+              className="title-input"
+            />
+
+            <div className="form-help">
+              <span>
+                최대 100자
+              </span>
+
+              <span>
+                제목을 수정해주세요.
+              </span>
+            </div>
+
+          </div>
+
+
+          {/* 본문 */}
+
+          <div className="form-group">
+
+            <label
+              htmlFor="content"
+              className="form-label"
+            >
+              내용
+              <span className="required">
+                *
+              </span>
+            </label>
+
+            <textarea
+              id="content"
+              name="content"
+              defaultValue={post.content}
+              maxLength={10000}
+              required
+              className="content-input"
+            />
+
+            <div className="form-help">
+              <span>
+                최대 10,000자
+              </span>
+
+              <span>
+                수정한 내용이 저장됩니다.
+              </span>
+            </div>
+
+          </div>
+
+
+          {/* 버튼 */}
+
+          <div className="form-actions">
+
+            <div className="left-actions">
+
+              <Link
+                href={`/board/${post.id}`}
+                className="cancel-button"
+              >
+                ← 취소
+              </Link>
+
+            </div>
+
+            <button
+              type="submit"
+              className="submit-button"
+            >
+              수정 완료
+            </button>
+
+          </div>
+
+        </form>
+
+      </div>
+
+
+      <div className="edit-tip">
+        💡 수정이 완료되면 게시글 상세 페이지로 이동합니다.
+      </div>
+
+    </main>
+  );
+}
