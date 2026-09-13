@@ -523,6 +523,192 @@ hr {
 
 
 /* ========================================
+   YouTube Shorts
+======================================== */
+
+.youtube-shorts-wrapper {
+  width: 100%;
+  overflow: hidden;
+}
+
+.youtube-shorts-list {
+  width: 100%;
+
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+
+  gap: 12px;
+
+  padding: 10px 0;
+}
+
+.youtube-short-card {
+  min-width: 0;
+
+  display: block;
+
+  overflow: hidden;
+
+  background: #10151d;
+
+  border: 1px solid #252b34;
+  border-radius: 10px;
+
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.youtube-short-card:hover {
+  transform: translateY(-3px);
+
+  border-color: #d6a928;
+
+  box-shadow:
+    0 8px 20px rgba(0, 0, 0, 0.35);
+}
+
+
+/* 쇼츠 썸네일 */
+
+.youtube-short-image {
+  position: relative;
+
+  width: 100%;
+
+  aspect-ratio: 9 / 16;
+
+  overflow: hidden;
+
+  background: #05070b;
+}
+
+.youtube-short-image img {
+  display: block;
+
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+
+  transition:
+    transform 0.25s ease;
+}
+
+.youtube-short-card:hover
+.youtube-short-image img {
+  transform: scale(1.04);
+}
+
+
+/* SHORTS 표시 */
+
+.youtube-short-badge {
+  position: absolute;
+
+  top: 7px;
+  left: 7px;
+
+  padding: 4px 7px;
+
+  border-radius: 5px;
+
+  background: rgba(0, 0, 0, 0.78);
+
+  color: #ffffff;
+
+  font-size: 9px;
+  font-weight: 800;
+
+  letter-spacing: 0.3px;
+}
+
+
+/* 재생 버튼 */
+
+.youtube-short-play {
+  position: absolute;
+
+  left: 50%;
+  top: 50%;
+
+  transform: translate(-50%, -50%);
+
+  width: 38px;
+  height: 38px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: rgba(0, 0, 0, 0.72);
+
+  color: #ffffff;
+
+  font-size: 15px;
+
+  padding-left: 2px;
+
+  pointer-events: none;
+}
+
+
+/* 쇼츠 정보 */
+
+.youtube-short-info {
+  padding: 9px 9px 10px;
+}
+
+.youtube-short-title {
+  display: -webkit-box;
+
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+
+  overflow: hidden;
+
+  color: #f5f5f5;
+
+  font-size: 12px;
+  line-height: 1.45;
+
+  font-weight: 600;
+}
+
+.youtube-short-channel {
+  margin-top: 6px;
+
+  color: #858d98;
+
+  font-size: 10px;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+
+/* ========================================
+   Shorts 로딩 / 빈 상태
+======================================== */
+
+.youtube-shorts-loading {
+  width: 100%;
+
+  padding: 35px 15px;
+
+  text-align: center;
+
+  color: #777f8b;
+
+  font-size: 13px;
+}
+
+
+/* ========================================
    모바일
 ======================================== */
 
@@ -560,6 +746,45 @@ hr {
   .site-main {
     padding: 24px 16px;
   }
+
+
+  /* ==============================
+     Shorts 모바일
+  ============================== */
+
+  .youtube-shorts-list {
+    display: flex;
+
+    gap: 10px;
+
+    overflow-x: auto;
+
+    padding: 10px 2px 14px;
+
+    scroll-snap-type: x mandatory;
+
+    scrollbar-width: thin;
+  }
+
+  .youtube-short-card {
+    flex: 0 0 125px;
+
+    width: 125px;
+
+    scroll-snap-align: start;
+  }
+
+  .youtube-short-info {
+    padding: 8px;
+  }
+
+  .youtube-short-title {
+    font-size: 11px;
+  }
+
+  .youtube-short-channel {
+    font-size: 9px;
+  }
 }
 
 
@@ -593,5 +818,36 @@ hr {
 
   .site-main {
     padding: 20px 12px;
+  }
+
+
+  /* ==============================
+     Shorts 작은 화면
+  ============================== */
+
+  .youtube-shorts-list {
+    gap: 8px;
+  }
+
+  .youtube-short-card {
+    flex: 0 0 115px;
+
+    width: 115px;
+  }
+
+  .youtube-short-badge {
+    top: 5px;
+    left: 5px;
+
+    padding: 3px 5px;
+
+    font-size: 8px;
+  }
+
+  .youtube-short-play {
+    width: 34px;
+    height: 34px;
+
+    font-size: 13px;
   }
 }

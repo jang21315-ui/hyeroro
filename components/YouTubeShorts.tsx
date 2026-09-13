@@ -18,7 +18,9 @@ export default function YouTubeShorts() {
   useEffect(() => {
     const loadVideos = async () => {
       try {
-        const response = await fetch("/api/youtube/shorts");
+        const response = await fetch("/api/youtube/shorts", {
+          cache: "no-store",
+        });
 
         if (!response.ok) {
           throw new Error("YouTube API 요청 실패");
@@ -28,10 +30,8 @@ export default function YouTubeShorts() {
 
         setVideos(data.videos ?? []);
       } catch (error) {
-        console.error(
-          "YouTube Shorts 불러오기 실패:",
-          error
-        );
+        console.error("YouTube Shorts 불러오기 실패:", error);
+        setVideos([]);
       } finally {
         setLoading(false);
       }
@@ -42,16 +42,20 @@ export default function YouTubeShorts() {
 
   if (loading) {
     return (
-      <div className="youtube-shorts-loading">
-        최근 쇼츠를 불러오는 중...
+      <div className="youtube-shorts-wrapper">
+        <div className="youtube-shorts-loading">
+          최근 쇼츠를 불러오는 중...
+        </div>
       </div>
     );
   }
 
   if (videos.length === 0) {
     return (
-      <div className="youtube-shorts-loading">
-        등록된 쇼츠가 없습니다.
+      <div className="youtube-shorts-wrapper">
+        <div className="youtube-shorts-loading">
+          등록된 쇼츠가 없습니다.
+        </div>
       </div>
     );
   }
@@ -59,7 +63,6 @@ export default function YouTubeShorts() {
   return (
     <div className="youtube-shorts-wrapper">
       <div className="youtube-shorts-list">
-
         {videos.map((video) => (
           <a
             key={video.id}
@@ -68,12 +71,11 @@ export default function YouTubeShorts() {
             rel="noopener noreferrer"
             className="youtube-short-card"
           >
-
             <div className="youtube-short-image">
-
               <img
                 src={video.thumbnail}
                 alt={video.title}
+                loading="lazy"
               />
 
               <div className="youtube-short-badge">
@@ -83,11 +85,9 @@ export default function YouTubeShorts() {
               <div className="youtube-short-play">
                 ▶
               </div>
-
             </div>
 
             <div className="youtube-short-info">
-
               <div className="youtube-short-title">
                 {video.title}
               </div>
@@ -95,12 +95,9 @@ export default function YouTubeShorts() {
               <div className="youtube-short-channel">
                 🔴 혜로로
               </div>
-
             </div>
-
           </a>
         ))}
-
       </div>
     </div>
   );

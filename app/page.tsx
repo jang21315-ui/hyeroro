@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
+import YouTubeLive from "@/components/YouTubeLive";
 import YouTubeShorts from "@/components/YouTubeShorts";
 
 type Post = {
@@ -99,6 +100,7 @@ export default async function HomePage() {
     <div className="home">
 
       <style>{`
+
         /* ========================================
            기본
         ======================================== */
@@ -128,15 +130,18 @@ export default async function HomePage() {
         .card-header {
           min-height: 44px;
           padding: 0 15px;
+
           display: flex;
           align-items: center;
           justify-content: space-between;
+
           background: #10151c;
           border-bottom: 1px solid #232a33;
         }
 
         .card-title {
           margin: 0;
+
           color: #edf0f3;
           font-size: 13px;
           font-weight: 800;
@@ -147,6 +152,7 @@ export default async function HomePage() {
           color: #626c78;
           font-size: 9px;
           font-weight: 700;
+
           transition: color 0.2s ease;
         }
 
@@ -161,11 +167,14 @@ export default async function HomePage() {
 
         .hero {
           position: relative;
+
           min-height: 190px;
           margin-bottom: 10px;
           padding: 30px;
+
           display: flex;
           align-items: center;
+
           overflow: hidden;
 
           background:
@@ -191,23 +200,32 @@ export default async function HomePage() {
 
         .hero::before {
           content: "";
+
           position: absolute;
+
           width: 260px;
           height: 260px;
+
           right: -100px;
           top: -90px;
+
           border: 1px solid rgba(214, 169, 40, 0.08);
           border-radius: 50%;
         }
 
         .hero::after {
           content: "⛏️";
+
           position: absolute;
+
           right: 42px;
           top: 17px;
+
           color: rgba(214, 169, 40, 0.07);
+
           font-size: 125px;
           line-height: 1;
+
           transform: rotate(-8deg);
         }
 
@@ -218,7 +236,9 @@ export default async function HomePage() {
 
         .hero-label {
           margin-bottom: 8px;
+
           color: #d6a928;
+
           font-size: 8px;
           font-weight: 900;
           letter-spacing: 2px;
@@ -226,7 +246,9 @@ export default async function HomePage() {
 
         .hero-title {
           margin: 0;
+
           color: #ffffff;
+
           font-size: 32px;
           font-weight: 950;
           letter-spacing: -1.5px;
@@ -238,22 +260,28 @@ export default async function HomePage() {
 
         .hero-description {
           margin: 9px 0 0;
+
           color: #737d89;
+
           font-size: 10px;
           line-height: 1.7;
         }
 
         .hero-buttons {
           margin-top: 16px;
+
           display: flex;
           gap: 7px;
         }
 
         .hero-button {
           padding: 8px 12px;
+
           border-radius: 4px;
+
           font-size: 8px;
           font-weight: 800;
+
           transition:
             transform 0.2s ease,
             background 0.2s ease,
@@ -267,6 +295,7 @@ export default async function HomePage() {
         .hero-button.primary {
           background: #d6a928;
           border: 1px solid #d6a928;
+
           color: #15120a;
         }
 
@@ -277,6 +306,7 @@ export default async function HomePage() {
         .hero-button.secondary {
           background: rgba(255,255,255,0.025);
           border: 1px solid #343d48;
+
           color: #cbd1d8;
         }
 
@@ -291,19 +321,23 @@ export default async function HomePage() {
 
         .home-grid {
           display: grid;
+
           grid-template-columns:
             minmax(0, 1fr)
             minmax(0, 1.35fr)
             minmax(220px, 0.8fr);
 
           gap: 10px;
+
           align-items: start;
         }
 
         .home-column {
           display: flex;
           flex-direction: column;
+
           gap: 10px;
+
           min-width: 0;
         }
 
@@ -319,6 +353,7 @@ export default async function HomePage() {
 
         .youtube-live-screen {
           width: 100%;
+
           aspect-ratio: 16 / 9;
 
           display: flex;
@@ -351,9 +386,11 @@ export default async function HomePage() {
           margin-bottom: 8px;
 
           background: #ff3344;
+
           border-radius: 50%;
 
           color: #ffffff;
+
           font-size: 15px;
 
           padding-left: 2px;
@@ -361,27 +398,86 @@ export default async function HomePage() {
 
         .youtube-live-text {
           color: #f0f2f5;
+
           font-size: 12px;
           font-weight: 800;
         }
 
         .youtube-live-sub {
           margin-top: 5px;
+
           color: #59636e;
+
+          font-size: 8px;
+        }
+
+        .youtube-live-live-status {
+          display: flex;
+          align-items: center;
+
+          gap: 5px;
+
+          padding: 8px 10px;
+
+          color: #ff4b5c;
+
+          font-size: 9px;
+          font-weight: 900;
+        }
+
+        .youtube-live-player {
+          width: 100%;
+
+          aspect-ratio: 16 / 9;
+
+          background: #05070a;
+        }
+
+        .youtube-live-player iframe {
+          display: block;
+
+          width: 100%;
+          height: 100%;
+
+          border: 0;
+        }
+
+        .youtube-live-title {
+          padding: 10px 10px 3px;
+
+          color: #e4e8ec;
+
+          font-size: 10px;
+          font-weight: 800;
+
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+
+        .youtube-live-channel {
+          padding: 0 10px 10px;
+
+          color: #69737e;
+
           font-size: 8px;
         }
 
         .live-link {
           display: block;
+
           margin: 0 10px 10px;
           padding: 9px;
 
           background: #171d25;
           border: 1px solid #2a323d;
+
           border-radius: 4px;
 
           color: #aeb6c0;
+
           text-align: center;
+
           font-size: 8px;
           font-weight: 700;
 
@@ -399,7 +495,16 @@ export default async function HomePage() {
         ======================================== */
 
         .shorts-wrapper {
+          width: 100%;
           padding: 10px;
+
+          overflow: hidden;
+        }
+
+        .shorts-wrapper > * {
+          width: 100%;
+          max-width: 100%;
+          min-width: 0;
         }
 
 
@@ -414,6 +519,7 @@ export default async function HomePage() {
         .notice-item {
           display: flex;
           align-items: center;
+
           gap: 8px;
 
           min-height: 35px;
@@ -426,19 +532,26 @@ export default async function HomePage() {
         }
 
         .notice-badge {
+          flex-shrink: 0;
+
           padding: 3px 5px;
 
           background: rgba(214, 169, 40, 0.1);
           border: 1px solid rgba(214, 169, 40, 0.2);
+
           border-radius: 3px;
 
           color: #d6a928;
+
           font-size: 7px;
           font-weight: 800;
         }
 
         .notice-text {
+          min-width: 0;
+
           color: #858e99;
+
           font-size: 8px;
 
           white-space: nowrap;
@@ -455,12 +568,15 @@ export default async function HomePage() {
           padding: 10px;
 
           display: grid;
+
           grid-template-columns: repeat(2, 1fr);
+
           gap: 7px;
         }
 
         .shortcut {
           min-height: 62px;
+
           padding: 10px;
 
           display: flex;
@@ -469,6 +585,7 @@ export default async function HomePage() {
 
           background: #10151c;
           border: 1px solid #252c35;
+
           border-radius: 5px;
 
           transition: all 0.2s ease;
@@ -476,24 +593,30 @@ export default async function HomePage() {
 
         .shortcut:hover {
           transform: translateY(-1px);
+
           border-color: #d6a928;
+
           background: #141a22;
         }
 
         .shortcut-icon {
           margin-bottom: 5px;
+
           font-size: 15px;
         }
 
         .shortcut-title {
           color: #dce1e6;
+
           font-size: 9px;
           font-weight: 800;
         }
 
         .shortcut-sub {
           margin-top: 3px;
+
           color: #59636e;
+
           font-size: 7px;
         }
 
@@ -520,6 +643,7 @@ export default async function HomePage() {
         .attendance-left {
           display: flex;
           align-items: center;
+
           gap: 11px;
         }
 
@@ -533,6 +657,7 @@ export default async function HomePage() {
 
           background: rgba(214, 169, 40, 0.08);
           border: 1px solid rgba(214, 169, 40, 0.18);
+
           border-radius: 6px;
 
           font-size: 18px;
@@ -540,25 +665,31 @@ export default async function HomePage() {
 
         .attendance-title {
           color: #e5e8eb;
+
           font-size: 10px;
           font-weight: 800;
         }
 
         .attendance-sub {
           margin-top: 4px;
+
           color: #5d6772;
+
           font-size: 7px;
         }
 
         .attendance-number {
           color: #d6a928;
+
           font-size: 20px;
           font-weight: 900;
         }
 
         .attendance-unit {
           margin-left: 3px;
+
           color: #69737e;
+
           font-size: 8px;
         }
 
@@ -611,9 +742,11 @@ export default async function HomePage() {
           margin-top: 4px;
 
           display: flex;
+
           gap: 6px;
 
           color: #505a66;
+
           font-size: 7px;
         }
 
@@ -621,6 +754,7 @@ export default async function HomePage() {
           flex-shrink: 0;
 
           color: #4d5661;
+
           font-size: 7px;
         }
 
@@ -628,7 +762,9 @@ export default async function HomePage() {
           padding: 25px 10px;
 
           color: #4f5965;
+
           text-align: center;
+
           font-size: 8px;
         }
 
@@ -644,12 +780,15 @@ export default async function HomePage() {
         .mineral-main {
           display: flex;
           align-items: center;
+
           gap: 12px;
         }
 
         .mineral-icon {
           width: 42px;
           height: 42px;
+
+          flex-shrink: 0;
 
           display: flex;
           align-items: center;
@@ -663,6 +802,7 @@ export default async function HomePage() {
             );
 
           border: 1px solid #554718;
+
           border-radius: 7px;
 
           font-size: 20px;
@@ -670,6 +810,7 @@ export default async function HomePage() {
 
         .mineral-title {
           color: #dfe3e7;
+
           font-size: 10px;
           font-weight: 800;
         }
@@ -678,6 +819,7 @@ export default async function HomePage() {
           margin-top: 5px;
 
           color: #5e6873;
+
           font-size: 7px;
           line-height: 1.6;
         }
@@ -687,7 +829,9 @@ export default async function HomePage() {
           padding-top: 12px;
 
           display: grid;
+
           grid-template-columns: repeat(3, 1fr);
+
           gap: 6px;
 
           border-top: 1px solid #1d242c;
@@ -699,14 +843,19 @@ export default async function HomePage() {
 
         .mineral-point strong {
           display: block;
+
           color: #d6a928;
+
           font-size: 10px;
         }
 
         .mineral-point span {
           display: block;
+
           margin-top: 3px;
+
           color: #555f6a;
+
           font-size: 6px;
         }
 
@@ -724,6 +873,7 @@ export default async function HomePage() {
 
           display: flex;
           align-items: center;
+
           gap: 8px;
 
           border-bottom: 1px solid #171d25;
@@ -739,6 +889,7 @@ export default async function HomePage() {
           color: #58626e;
 
           text-align: center;
+
           font-size: 8px;
           font-weight: 900;
         }
@@ -757,6 +908,7 @@ export default async function HomePage() {
 
         .ranking-user {
           min-width: 0;
+
           flex: 1;
         }
 
@@ -777,6 +929,7 @@ export default async function HomePage() {
           margin-top: 3px;
 
           color: #59636e;
+
           font-size: 6px;
         }
 
@@ -794,19 +947,23 @@ export default async function HomePage() {
 
           display: flex;
           flex-direction: column;
+
           gap: 7px;
         }
 
         .side-button {
           min-height: 55px;
+
           padding: 11px;
 
           display: flex;
           align-items: center;
+
           gap: 10px;
 
           background: #10151c;
           border: 1px solid #252c35;
+
           border-radius: 5px;
 
           transition: all 0.2s ease;
@@ -814,6 +971,7 @@ export default async function HomePage() {
 
         .side-button:hover {
           border-color: #d6a928;
+
           background: #141a22;
         }
 
@@ -823,13 +981,18 @@ export default async function HomePage() {
 
         .side-button-title {
           color: #d8dde2;
+
           font-size: 9px;
           font-weight: 800;
         }
 
         .side-button-sub {
+          display: block;
+
           margin-top: 3px;
+
           color: #555f6a;
+
           font-size: 7px;
         }
 
@@ -852,6 +1015,7 @@ export default async function HomePage() {
 
         .donation-title {
           color: #e0e4e8;
+
           font-size: 9px;
           font-weight: 800;
         }
@@ -860,6 +1024,7 @@ export default async function HomePage() {
           margin-top: 6px;
 
           color: #59636e;
+
           font-size: 7px;
           line-height: 1.6;
         }
@@ -872,9 +1037,11 @@ export default async function HomePage() {
 
           background: #161c24;
           border: 1px solid #303945;
+
           border-radius: 4px;
 
           color: #cfd5db;
+
           text-align: center;
 
           font-size: 8px;
@@ -885,6 +1052,7 @@ export default async function HomePage() {
 
         .donation-button:hover {
           border-color: #d6a928;
+
           color: #d6a928;
         }
 
@@ -894,6 +1062,7 @@ export default async function HomePage() {
         ======================================== */
 
         @media (max-width: 1050px) {
+
           .home-grid {
             grid-template-columns:
               minmax(0, 1fr)
@@ -904,14 +1073,19 @@ export default async function HomePage() {
             grid-column: 1 / -1;
 
             display: grid;
+
             grid-template-columns:
               repeat(3, minmax(0, 1fr));
+
+            gap: 10px;
           }
         }
 
         @media (max-width: 720px) {
+
           .hero {
             min-height: 175px;
+
             padding: 22px;
           }
 
@@ -921,6 +1095,7 @@ export default async function HomePage() {
 
           .hero::after {
             right: -5px;
+
             font-size: 90px;
           }
 
@@ -930,11 +1105,13 @@ export default async function HomePage() {
 
           .home-column:last-child {
             grid-column: auto;
+
             display: flex;
           }
 
           .shortcut-grid {
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns:
+              repeat(2, 1fr);
           }
         }
 
@@ -946,6 +1123,7 @@ export default async function HomePage() {
       ======================================== */}
 
       <section className="hero">
+
         <div className="hero-content">
 
           <div className="hero-label">
@@ -963,6 +1141,7 @@ export default async function HomePage() {
           </p>
 
           <div className="hero-buttons">
+
             <Link
               href="/board"
               className="hero-button primary"
@@ -976,9 +1155,11 @@ export default async function HomePage() {
             >
               오늘 출석하기
             </Link>
+
           </div>
 
         </div>
+
       </section>
 
 
@@ -994,6 +1175,7 @@ export default async function HomePage() {
         ====================================== */}
 
         <div className="home-column">
+
 
           {/* LIVE */}
 
@@ -1016,25 +1198,9 @@ export default async function HomePage() {
 
             </div>
 
-            <div className="youtube-live-box">
+            {/* 실제 LIVE 컴포넌트 */}
 
-              <div className="youtube-live-screen">
-
-                <div className="youtube-live-icon">
-                  ▶
-                </div>
-
-                <div className="youtube-live-text">
-                  혜로로 LIVE
-                </div>
-
-                <div className="youtube-live-sub">
-                  유튜브 채널에서 라이브 방송을 확인하세요.
-                </div>
-
-              </div>
-
-            </div>
+            <YouTubeLive />
 
             <a
               href="https://www.youtube.com/@HyeroroTV/live"
@@ -1098,6 +1264,7 @@ export default async function HomePage() {
             <div className="notice-list">
 
               <div className="notice-item">
+
                 <span className="notice-badge">
                   NOTICE
                 </span>
@@ -1105,9 +1272,12 @@ export default async function HomePage() {
                 <span className="notice-text">
                   혜로로 커뮤니티에 오신 것을 환영합니다.
                 </span>
+
               </div>
 
+
               <div className="notice-item">
+
                 <span className="notice-badge">
                   INFO
                 </span>
@@ -1115,9 +1285,12 @@ export default async function HomePage() {
                 <span className="notice-text">
                   출석체크를 하면 매일 미네랄을 받을 수 있습니다.
                 </span>
+
               </div>
 
+
               <div className="notice-item">
+
                 <span className="notice-badge">
                   SHOP
                 </span>
@@ -1125,6 +1298,7 @@ export default async function HomePage() {
                 <span className="notice-text">
                   모은 미네랄은 상점에서 사용할 수 있습니다.
                 </span>
+
               </div>
 
             </div>
@@ -1140,7 +1314,8 @@ export default async function HomePage() {
 
         <div className="home-column">
 
-          {/* 바로가기 */}
+
+          {/* 빠른 메뉴 */}
 
           <section className="home-card">
 
@@ -1158,6 +1333,7 @@ export default async function HomePage() {
                 href="/board"
                 className="shortcut"
               >
+
                 <span className="shortcut-icon">
                   💬
                 </span>
@@ -1169,6 +1345,7 @@ export default async function HomePage() {
                 <span className="shortcut-sub">
                   자유롭게 이야기해요
                 </span>
+
               </Link>
 
 
@@ -1176,6 +1353,7 @@ export default async function HomePage() {
                 href="/ranking"
                 className="shortcut"
               >
+
                 <span className="shortcut-icon">
                   🏆
                 </span>
@@ -1187,6 +1365,7 @@ export default async function HomePage() {
                 <span className="shortcut-sub">
                   현재 순위를 확인
                 </span>
+
               </Link>
 
 
@@ -1194,6 +1373,7 @@ export default async function HomePage() {
                 href="/attendance"
                 className="shortcut"
               >
+
                 <span className="shortcut-icon">
                   📅
                 </span>
@@ -1205,6 +1385,7 @@ export default async function HomePage() {
                 <span className="shortcut-sub">
                   매일 미네랄 받기
                 </span>
+
               </Link>
 
 
@@ -1212,6 +1393,7 @@ export default async function HomePage() {
                 href="/mypage"
                 className="shortcut"
               >
+
                 <span className="shortcut-icon">
                   👤
                 </span>
@@ -1223,6 +1405,7 @@ export default async function HomePage() {
                 <span className="shortcut-sub">
                   내 활동 확인
                 </span>
+
               </Link>
 
             </div>
@@ -1272,6 +1455,7 @@ export default async function HomePage() {
               </div>
 
               <div>
+
                 <span className="attendance-number">
                   {todayAttendanceCount}
                 </span>
@@ -1279,6 +1463,7 @@ export default async function HomePage() {
                 <span className="attendance-unit">
                   명
                 </span>
+
               </div>
 
             </div>
@@ -1403,22 +1588,44 @@ export default async function HomePage() {
 
               </div>
 
-
               <div className="mineral-points">
 
                 <div className="mineral-point">
-                  <strong>+10</strong>
-                  <span>출석</span>
+
+                  <strong>
+                    +10
+                  </strong>
+
+                  <span>
+                    출석
+                  </span>
+
                 </div>
 
-                <div className="mineral-point">
-                  <strong>GAME</strong>
-                  <span>게임</span>
-                </div>
 
                 <div className="mineral-point">
-                  <strong>SHOP</strong>
-                  <span>상점</span>
+
+                  <strong>
+                    GAME
+                  </strong>
+
+                  <span>
+                    게임
+                  </span>
+
+                </div>
+
+
+                <div className="mineral-point">
+
+                  <strong>
+                    SHOP
+                  </strong>
+
+                  <span>
+                    상점
+                  </span>
+
                 </div>
 
               </div>
@@ -1443,6 +1650,7 @@ export default async function HomePage() {
             <div className="notice-list">
 
               <div className="notice-item">
+
                 <span className="notice-badge">
                   01
                 </span>
@@ -1450,9 +1658,12 @@ export default async function HomePage() {
                 <span className="notice-text">
                   회원가입 후 커뮤니티를 이용해주세요.
                 </span>
+
               </div>
 
+
               <div className="notice-item">
+
                 <span className="notice-badge">
                   02
                 </span>
@@ -1460,9 +1671,12 @@ export default async function HomePage() {
                 <span className="notice-text">
                   매일 출석하고 미네랄을 모아보세요.
                 </span>
+
               </div>
 
+
               <div className="notice-item">
+
                 <span className="notice-badge">
                   03
                 </span>
@@ -1470,6 +1684,7 @@ export default async function HomePage() {
                 <span className="notice-text">
                   미네랄 게임과 상점도 이용할 수 있습니다.
                 </span>
+
               </div>
 
             </div>
@@ -1484,6 +1699,7 @@ export default async function HomePage() {
         ====================================== */}
 
         <div className="home-column">
+
 
           {/* 랭킹 */}
 
@@ -1532,7 +1748,11 @@ export default async function HomePage() {
                       </span>
 
                       <div className="ranking-mineral">
-                        ⛏️ <b>{profile.minerals ?? 0}</b> 미네랄
+                        ⛏️{" "}
+                        <b>
+                          {profile.minerals ?? 0}
+                        </b>{" "}
+                        미네랄
                       </div>
 
                     </div>
@@ -1572,6 +1792,7 @@ export default async function HomePage() {
                 </span>
 
                 <span>
+
                   <span className="side-button-title">
                     주사위 게임
                   </span>
@@ -1579,6 +1800,7 @@ export default async function HomePage() {
                   <span className="side-button-sub">
                     미네랄 게임을 즐겨보세요
                   </span>
+
                 </span>
 
               </Link>
@@ -1619,6 +1841,7 @@ export default async function HomePage() {
                 </span>
 
                 <span>
+
                   <span className="side-button-title">
                     아이템 구매
                   </span>
@@ -1626,6 +1849,7 @@ export default async function HomePage() {
                   <span className="side-button-sub">
                     모은 미네랄을 사용해보세요
                   </span>
+
                 </span>
 
               </Link>
