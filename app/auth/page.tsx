@@ -1,162 +1,174 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
-import { useRouter } from "next/navigation";
 
-export default function Auth() {
-  const supabase = createClient();
-  const router = useRouter();
+type Mode = "login" | "signup";
 
-  const [mode, setMode] = useState<"login" | "signup">("login");
+export default function AuthPage() {
+  const [mode, setMode] = useState<Mode>("login");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [nickname, setNickname] = useState("");
-  const [msg, setMsg] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  async function submit() {
-    setMsg("");
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
 
-    if (mode === "login") {
-      const { error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
+    if (!email || !password) {
+      alert("이메일과 비밀번호를 입력해주세요.");
+      return;
+    }
 
-      if (error) {
-        setMsg(error.message);
-      } else {
-        router.push("/");
-        router.refresh();
+    if (mode === "signup" && !nickname.trim()) {
+      alert("닉네임을 입력해주세요.");
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const supabase = createClient();
+
+      if (mode === "login") {
+        const { error } = await supabase.auth.signInWithPassword({
+          email,
+          password,
+        });
+
+        if (error) {
+          alert(error.message);
+          return;
+        }
+
+        window.location.href = "/";
+        return;
       }
-    } else {
+
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
           data: {
-            nickname,
+            nickname: nickname.trim(),
           },
         },
       });
 
       if (error) {
-        setMsg(error.message);
-      } else {
-        setMsg(
-          data.session
-            ? "가입이 완료되었습니다."
-            : "이메일 인증 후 로그인해주세요."
-        );
+        alert(error.message);
+        return;
+      }
 
+      if (data.session) {
+        window.location.href = "/";
+      } else {
+        alert(
+          "회원가입이 완료되었습니다. 이메일 인증이 필요한 경우 이메일을 확인해주세요."
+        );
         setMode("login");
       }
+    } catch (error) {
+      console.error("Auth Error:", error);
+      alert("처리 중 오류가 발생했습니다.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function handleGoogleLogin() {
+    setLoading(true);
+
+    try {
+      const supabase = createClient();
+
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: {
+          redirectTo: `${window.location.origin}/auth`,
+        },
+      });
+
+      if (error) {
+        alert(error.message);
+        setLoading(false);
+      }
+    } catch (error) {
+      console.error("Google Login Error:", error);
+      alert("Google 로그인 중 오류가 발생했습니다.");
+      setLoading(false);
     }
   }
 
   return (
     <main
       style={{
-        width: "100%",
-        minHeight: "calc(100vh - 180px)",
+        minHeight: "calc(100vh - 70px)",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
+        padding: "40px 20px",
+        background: "#080b10",
       }}
     >
-      <section
+      <div
         style={{
           width: "100%",
-          maxWidth: "460px",
-
-          background: "#0b0f15",
-          border: "1px solid #252b34",
-          borderRadius: "12px",
-
+          maxWidth: "430px",
           padding: "32px",
-
-          boxShadow:
-            "0 12px 40px rgba(0, 0, 0, 0.35)",
+          borderRadius: "14px",
+          background: "#11161d",
+          border: "1px solid #252d38",
+          boxShadow: "0 20px 60px rgba(0, 0, 0, 0.35)",
         }}
       >
-        {/* 로고 */}
         <div
           style={{
             textAlign: "center",
             marginBottom: "28px",
           }}
         >
-          <div
-            style={{
-              fontSize: "34px",
-              marginBottom: "8px",
-            }}
-          >
-            ⛏️
-          </div>
-
           <h1
             style={{
               margin: 0,
-              color: "#ffffff",
-              fontSize: "26px",
-              fontWeight: 800,
+              color: "#d6a928",
+              fontSize: "30px",
+              fontWeight: 900,
             }}
           >
-            혜로로
+            HYE RORO
           </h1>
 
           <p
             style={{
-              margin: "8px 0 0",
-              color: "#737c88",
+              margin: "10px 0 0",
+              color: "#8f9baa",
               fontSize: "13px",
             }}
           >
-            {mode === "login"
-              ? "혜로로에 로그인하세요."
-              : "혜로로 회원이 되어보세요."}
+            혜로로 커뮤니티
           </p>
         </div>
 
-        {/* 로그인 / 회원가입 탭 */}
         <div
           style={{
             display: "grid",
             gridTemplateColumns: "1fr 1fr",
-            marginBottom: "24px",
-
-            background: "#080b10",
-            border: "1px solid #252b34",
-            borderRadius: "8px",
-            padding: "4px",
+            gap: "8px",
+            marginBottom: "22px",
           }}
         >
           <button
             type="button"
-            onClick={() => {
-              setMode("login");
-              setMsg("");
-            }}
+            onClick={() => setMode("login")}
             style={{
-              minHeight: "38px",
-
-              border: "none",
-              borderRadius: "6px",
-
+              height: "42px",
+              border: "1px solid #303946",
+              borderRadius: "8px",
               background:
-                mode === "login"
-                  ? "#d6a928"
-                  : "transparent",
-
-              color:
-                mode === "login"
-                  ? "#111111"
-                  : "#7f8792",
-
-              fontSize: "13px",
-              fontWeight: 700,
-
+                mode === "login" ? "#d6a928" : "#171d25",
+              color: mode === "login" ? "#111" : "#aeb7c3",
+              fontWeight: 800,
               cursor: "pointer",
             }}
           >
@@ -165,29 +177,15 @@ export default function Auth() {
 
           <button
             type="button"
-            onClick={() => {
-              setMode("signup");
-              setMsg("");
-            }}
+            onClick={() => setMode("signup")}
             style={{
-              minHeight: "38px",
-
-              border: "none",
-              borderRadius: "6px",
-
+              height: "42px",
+              border: "1px solid #303946",
+              borderRadius: "8px",
               background:
-                mode === "signup"
-                  ? "#d6a928"
-                  : "transparent",
-
-              color:
-                mode === "signup"
-                  ? "#111111"
-                  : "#7f8792",
-
-              fontSize: "13px",
-              fontWeight: 700,
-
+                mode === "signup" ? "#d6a928" : "#171d25",
+              color: mode === "signup" ? "#111" : "#aeb7c3",
+              fontWeight: 800,
               cursor: "pointer",
             }}
           >
@@ -195,172 +193,198 @@ export default function Auth() {
           </button>
         </div>
 
-        {/* 회원가입 닉네임 */}
-        {mode === "signup" && (
-          <div style={{ marginBottom: "18px" }}>
+        <form onSubmit={handleSubmit}>
+          {mode === "signup" && (
+            <div style={{ marginBottom: "14px" }}>
+              <label
+                style={{
+                  display: "block",
+                  marginBottom: "7px",
+                  color: "#d7dde5",
+                  fontSize: "13px",
+                  fontWeight: 700,
+                }}
+              >
+                닉네임
+              </label>
+
+              <input
+                type="text"
+                value={nickname}
+                onChange={(e) => setNickname(e.target.value)}
+                placeholder="닉네임을 입력하세요"
+                maxLength={20}
+                style={{
+                  width: "100%",
+                  height: "46px",
+                  padding: "0 13px",
+                  boxSizing: "border-box",
+                  border: "1px solid #303946",
+                  borderRadius: "8px",
+                  outline: "none",
+                  background: "#0b1016",
+                  color: "#fff",
+                  fontSize: "14px",
+                }}
+              />
+            </div>
+          )}
+
+          <div style={{ marginBottom: "14px" }}>
             <label
               style={{
                 display: "block",
-                marginBottom: "8px",
-                color: "#d9dde3",
+                marginBottom: "7px",
+                color: "#d7dde5",
                 fontSize: "13px",
-                fontWeight: 600,
+                fontWeight: 700,
               }}
             >
-              닉네임
+              이메일
             </label>
 
             <input
-              type="text"
-              value={nickname}
-              onChange={(e) => setNickname(e.target.value)}
-              placeholder="닉네임을 입력하세요"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="example@email.com"
+              autoComplete="email"
               style={{
                 width: "100%",
-                height: "44px",
+                height: "46px",
                 padding: "0 13px",
-
-                background: "#0d1219",
-                color: "#ffffff",
-
-                border: "1px solid #303743",
+                boxSizing: "border-box",
+                border: "1px solid #303946",
                 borderRadius: "8px",
-
+                outline: "none",
+                background: "#0b1016",
+                color: "#fff",
                 fontSize: "14px",
               }}
             />
           </div>
-        )}
 
-        {/* 이메일 */}
-        <div style={{ marginBottom: "18px" }}>
-          <label
-            style={{
-              display: "block",
-              marginBottom: "8px",
-              color: "#d9dde3",
-              fontSize: "13px",
-              fontWeight: 600,
-            }}
-          >
-            이메일
-          </label>
+          <div style={{ marginBottom: "18px" }}>
+            <label
+              style={{
+                display: "block",
+                marginBottom: "7px",
+                color: "#d7dde5",
+                fontSize: "13px",
+                fontWeight: 700,
+              }}
+            >
+              비밀번호
+            </label>
 
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="이메일을 입력하세요"
-            style={{
-              width: "100%",
-              height: "44px",
-              padding: "0 13px",
-
-              background: "#0d1219",
-              color: "#ffffff",
-
-              border: "1px solid #303743",
-              borderRadius: "8px",
-
-              fontSize: "14px",
-            }}
-          />
-        </div>
-
-        {/* 비밀번호 */}
-        <div style={{ marginBottom: "22px" }}>
-          <label
-            style={{
-              display: "block",
-              marginBottom: "8px",
-              color: "#d9dde3",
-              fontSize: "13px",
-              fontWeight: 600,
-            }}
-          >
-            비밀번호
-          </label>
-
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="비밀번호를 입력하세요"
-            style={{
-              width: "100%",
-              height: "44px",
-              padding: "0 13px",
-
-              background: "#0d1219",
-              color: "#ffffff",
-
-              border: "1px solid #303743",
-              borderRadius: "8px",
-
-              fontSize: "14px",
-            }}
-          />
-        </div>
-
-        {/* 메시지 */}
-        {msg && (
-          <div
-            style={{
-              marginBottom: "18px",
-              padding: "12px 14px",
-
-              background: "#11161e",
-              border: "1px solid #303743",
-              borderRadius: "8px",
-
-              color: "#aeb4bd",
-              fontSize: "13px",
-              lineHeight: 1.5,
-            }}
-          >
-            {msg}
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="비밀번호를 입력하세요"
+              autoComplete={
+                mode === "login"
+                  ? "current-password"
+                  : "new-password"
+              }
+              style={{
+                width: "100%",
+                height: "46px",
+                padding: "0 13px",
+                boxSizing: "border-box",
+                border: "1px solid #303946",
+                borderRadius: "8px",
+                outline: "none",
+                background: "#0b1016",
+                color: "#fff",
+                fontSize: "14px",
+              }}
+            />
           </div>
-        )}
 
-        {/* 제출 버튼 */}
-        <button
-          type="button"
-          onClick={submit}
-          style={{
-            width: "100%",
-            height: "46px",
+          <button
+            type="submit"
+            disabled={loading}
+            style={{
+              width: "100%",
+              height: "48px",
+              border: "none",
+              borderRadius: "8px",
+              background: loading ? "#66531d" : "#d6a928",
+              color: "#111",
+              fontSize: "14px",
+              fontWeight: 900,
+              cursor: loading ? "not-allowed" : "pointer",
+            }}
+          >
+            {loading
+              ? "처리 중..."
+              : mode === "login"
+                ? "로그인"
+                : "회원가입"}
+          </button>
+        </form>
 
-            background: "#d6a928",
-            color: "#111111",
-
-            border: "1px solid #d6a928",
-            borderRadius: "8px",
-
-            fontSize: "14px",
-            fontWeight: 800,
-
-            cursor: "pointer",
-          }}
-        >
-          {mode === "login" ? "로그인" : "회원가입"}
-        </button>
-
-        {/* 하단 안내 */}
         <div
           style={{
-            marginTop: "20px",
-            paddingTop: "18px",
-
-            borderTop: "1px solid #252b34",
-
-            textAlign: "center",
-            color: "#5f6874",
+            display: "flex",
+            alignItems: "center",
+            gap: "12px",
+            margin: "22px 0",
+            color: "#596473",
             fontSize: "12px",
           }}
         >
-          ⛏️ 혜로로 커뮤니티
+          <div
+            style={{
+              flex: 1,
+              height: "1px",
+              background: "#29313c",
+            }}
+          />
+          <span>또는</span>
+          <div
+            style={{
+              flex: 1,
+              height: "1px",
+              background: "#29313c",
+            }}
+          />
         </div>
-      </section>
+
+        <button
+          type="button"
+          onClick={handleGoogleLogin}
+          disabled={loading}
+          style={{
+            width: "100%",
+            height: "48px",
+            border: "1px solid #303946",
+            borderRadius: "8px",
+            background: "#fff",
+            color: "#222",
+            fontSize: "14px",
+            fontWeight: 800,
+            cursor: loading ? "not-allowed" : "pointer",
+          }}
+        >
+          Google로 로그인
+        </button>
+
+        <p
+          style={{
+            margin: "20px 0 0",
+            textAlign: "center",
+            color: "#687482",
+            fontSize: "11px",
+            lineHeight: 1.6,
+          }}
+        >
+          Google 계정으로도 간편하게 가입하고
+          <br />
+          로그인할 수 있습니다.
+        </p>
+      </div>
     </main>
   );
 }

@@ -1,7 +1,8 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { Great_Vibes } from "next/font/google";
 import { createClient } from "@/lib/supabase/server";
 import LogoutButton from "./LogoutButton";
+import GoogleLoginButton from "./GoogleLoginButton";
 
 const hyeroroFont = Great_Vibes({
   weight: "400",
@@ -30,74 +31,40 @@ export default async function Header() {
   return (
     <header className="site-header">
       <div className="header-inner">
-
-        {/* 로고 */}
         <Link href="/" className="logo">
           <span className={hyeroroFont.className}>
             Hyeroro
           </span>
         </Link>
 
-        {/* 메인 메뉴 */}
         <nav className="main-nav">
-
-          <Link href="/">
-            홈
-          </Link>
-
-          <Link href="/board">
-            게시판
-          </Link>
-
-          <Link href="/ranking">
-            랭킹
-          </Link>
-
-          <Link href="/shop">
-            상점
-          </Link>
-
-          <Link href="/games">
-            게임
-          </Link>
-
+          <Link href="/">홈</Link>
+          <Link href="/board">게시판</Link>
+          <Link href="/ranking">랭킹</Link>
+          <Link href="/shop">상점</Link>
+          <Link href="/games">게임</Link>
         </nav>
 
-        {/* 오른쪽 사용자 영역 */}
         <div className="header-user">
-
           {user && profile ? (
             <>
-              {/* 미네랄 */}
               <div className="mineral">
                 <span className="mineral-icon" />
                 <span>
-                  {Number(profile.minerals).toLocaleString()}
+                  {Number(profile.minerals ?? 0).toLocaleString()}
                 </span>
               </div>
 
-              {/* 닉네임 */}
-              <Link
-                href="/mypage"
-                className="user-name"
-              >
+              <Link href="/mypage" className="user-name">
                 {profile.nickname}
               </Link>
 
-              {/* 로그아웃 */}
               <LogoutButton />
             </>
           ) : (
-            <Link
-              href="/auth"
-              className="user-name"
-            >
-              로그인
-            </Link>
+            <GoogleLoginButton />
           )}
-
         </div>
-
       </div>
     </header>
   );
