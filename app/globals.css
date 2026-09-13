@@ -20,13 +20,16 @@ html {
 body {
   background: #05070b;
   color: #f5f5f5;
+
   font-family:
     Arial,
     "Noto Sans KR",
     sans-serif;
 }
 
-/* 링크 */
+/* ========================================
+   링크
+======================================== */
 
 a {
   color: inherit;
@@ -36,65 +39,95 @@ a {
 
 /* ========================================
    전체 사이트
-   ======================================== */
+======================================== */
 
 .site-wrapper {
   min-height: 100vh;
+
   display: flex;
   flex-direction: column;
+
   background: #05070b;
 }
 
 
 /* ========================================
    헤더
-   ======================================== */
+======================================== */
 
 .site-header {
   width: 100%;
+
   background: #080b10;
   color: white;
+
   border-bottom: 1px solid #252a32;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.35);
+
+  box-shadow:
+    0 2px 12px rgba(0, 0, 0, 0.35);
 }
 
 .header-inner {
   max-width: 1200px;
   min-height: 70px;
+
   margin: 0 auto;
   padding: 0 24px;
 
   display: flex;
   align-items: center;
+
   gap: 40px;
 }
 
 
 /* ========================================
-   로고
-   ======================================== */
+   HYERORO 로고
+======================================== */
 
 .logo {
+  display: inline-flex;
+  align-items: center;
+
   color: #ffffff;
-  font-size: 25px;
-  font-weight: 800;
+
+  font-size: 30px;
+  line-height: 1;
+
   white-space: nowrap;
-  transition: opacity 0.2s;
+
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
 }
 
 .logo:hover {
   opacity: 0.85;
+  transform: translateY(-1px);
+}
+
+.logo span {
+  position: relative;
+
+  top: -2px;
+
+  letter-spacing: 0.5px;
+
+  text-shadow:
+    0 2px 12px rgba(255, 255, 255, 0.12);
 }
 
 
 /* ========================================
    메인 메뉴
-   ======================================== */
+======================================== */
 
 .main-nav {
   display: flex;
   align-items: center;
+
   gap: 28px;
+
   flex: 1;
 }
 
@@ -102,6 +135,7 @@ a {
   position: relative;
 
   color: #aeb4bd;
+
   font-size: 15px;
   font-weight: 600;
 
@@ -112,37 +146,157 @@ a {
 
 .main-nav a:hover {
   color: #ffffff;
+
   transform: translateY(-1px);
 }
 
 
 /* ========================================
    사용자 영역
-   ======================================== */
+======================================== */
 
 .header-user {
   display: flex;
   align-items: center;
+
   gap: 18px;
+
   white-space: nowrap;
 }
 
 
-/* 미네랄 */
+/* ========================================
+   미네랄
+======================================== */
 
 .mineral {
-  color: #4fd1c5;
-  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+
+  color: #dffaff;
+
   font-size: 15px;
+  font-weight: 700;
+
+  white-space: nowrap;
 }
 
 
-/* 사용자 이름 */
+/* ========================================
+   스타크래프트 느낌의 미네랄 결정
+======================================== */
+
+.mineral-icon {
+  position: relative;
+
+  display: inline-block;
+
+  width: 19px;
+  height: 19px;
+
+  margin-right: 7px;
+
+  flex-shrink: 0;
+
+  background:
+    linear-gradient(
+      135deg,
+      #e7ffff 0%,
+      #7cecff 20%,
+      #2ac4e8 42%,
+      #087ba8 70%,
+      #043c5b 100%
+    );
+
+  clip-path: polygon(
+    48% 0%,
+    78% 12%,
+    100% 48%,
+    84% 82%,
+    58% 100%,
+    24% 88%,
+    0% 52%,
+    17% 18%
+  );
+
+  box-shadow:
+    0 0 7px rgba(43, 214, 255, 0.55);
+}
+
+
+/* 미네랄 밝은 면 */
+
+.mineral-icon::before {
+  content: "";
+
+  position: absolute;
+
+  width: 7px;
+  height: 11px;
+
+  left: 4px;
+  top: 3px;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.9),
+      rgba(255, 255, 255, 0.15)
+    );
+
+  clip-path: polygon(
+    50% 0%,
+    100% 25%,
+    70% 100%,
+    0% 60%
+  );
+}
+
+
+/* 미네랄 반짝임 */
+
+.mineral-icon::after {
+  content: "";
+
+  position: absolute;
+
+  width: 3px;
+  height: 3px;
+
+  right: 4px;
+  top: 5px;
+
+  border-radius: 50%;
+
+  background: rgba(255, 255, 255, 0.85);
+
+  box-shadow:
+    0 0 4px rgba(255, 255, 255, 0.7);
+}
+
+
+/* 미네랄 숫자 */
+
+.mineral span:last-child {
+  color: #dffaff;
+
+  text-shadow:
+    0 0 8px rgba(58, 220, 255, 0.18);
+}
+
+
+/* ========================================
+   사용자 이름
+======================================== */
 
 .user-name {
   color: #ffffff;
+
   font-weight: 600;
   font-size: 14px;
+
+  transition:
+    color 0.2s ease;
 }
 
 .user-name:hover {
@@ -152,12 +306,14 @@ a {
 
 /* ========================================
    메인 영역
-   ======================================== */
+======================================== */
 
 .site-main {
   width: 100%;
   max-width: 1200px;
+
   margin: 0 auto;
+
   padding: 40px 24px;
 
   flex: 1;
@@ -166,12 +322,14 @@ a {
 
 /* ========================================
    공통 카드
-   ======================================== */
+======================================== */
 
 .card {
   background: #0b0f15;
+
   border: 1px solid #252b34;
   border-radius: 12px;
+
   box-shadow:
     0 8px 30px rgba(0, 0, 0, 0.25);
 }
@@ -179,7 +337,7 @@ a {
 
 /* ========================================
    버튼
-   ======================================== */
+======================================== */
 
 .btn {
   display: inline-flex;
@@ -187,6 +345,7 @@ a {
   justify-content: center;
 
   min-height: 40px;
+
   padding: 0 16px;
 
   border: 1px solid #d6a928;
@@ -209,28 +368,35 @@ a {
 .btn:hover {
   background: #f0c43d;
   border-color: #f0c43d;
+
   transform: translateY(-1px);
 }
 
 
-/* 보조 버튼 */
+/* ========================================
+   보조 버튼
+======================================== */
 
 .btn.secondary {
   background: #11161e;
+
   border-color: #343b46;
+
   color: #d9dde3;
 }
 
 .btn.secondary:hover {
   background: #171d26;
+
   border-color: #555e6c;
+
   color: #ffffff;
 }
 
 
 /* ========================================
    입력창
-   ======================================== */
+======================================== */
 
 input,
 textarea,
@@ -242,7 +408,9 @@ input,
 textarea,
 select {
   background: #0d1219;
+
   color: #f5f5f5;
+
   border: 1px solid #303743;
   border-radius: 8px;
 }
@@ -251,8 +419,11 @@ input:focus,
 textarea:focus,
 select:focus {
   outline: none;
+
   border-color: #d6a928;
-  box-shadow: 0 0 0 2px rgba(214, 169, 40, 0.12);
+
+  box-shadow:
+    0 0 0 2px rgba(214, 169, 40, 0.12);
 }
 
 input::placeholder,
@@ -263,7 +434,7 @@ textarea::placeholder {
 
 /* ========================================
    제목
-   ======================================== */
+======================================== */
 
 h1,
 h2,
@@ -281,46 +452,55 @@ h1 {
 
 /* ========================================
    구분선
-   ======================================== */
+======================================== */
 
 hr {
   border: 0;
+
   border-top: 1px solid #252b34;
 }
 
 
 /* ========================================
    푸터
-   ======================================== */
+======================================== */
 
 .site-footer {
   width: 100%;
+
   background: #080b10;
+
   color: #777f8b;
+
   border-top: 1px solid #252a32;
 }
 
 .footer-inner {
   max-width: 1200px;
+
   margin: 0 auto;
+
   padding: 30px 24px;
+
   text-align: center;
 }
 
 .footer-inner strong {
   color: #ffffff;
+
   font-size: 18px;
 }
 
 .footer-inner p {
   margin: 8px 0;
+
   font-size: 13px;
 }
 
 
 /* ========================================
    스크롤바
-   ======================================== */
+======================================== */
 
 ::-webkit-scrollbar {
   width: 8px;
@@ -333,6 +513,7 @@ hr {
 
 ::-webkit-scrollbar-thumb {
   background: #303640;
+
   border-radius: 10px;
 }
 
@@ -343,14 +524,16 @@ hr {
 
 /* ========================================
    모바일
-   ======================================== */
+======================================== */
 
 @media (max-width: 768px) {
   .header-inner {
     min-height: auto;
+
     padding: 16px 20px;
 
     flex-wrap: wrap;
+
     gap: 18px;
   }
 
@@ -382,7 +565,7 @@ hr {
 
 /* ========================================
    작은 화면
-   ======================================== */
+======================================== */
 
 @media (max-width: 480px) {
   .header-inner {
@@ -390,7 +573,7 @@ hr {
   }
 
   .logo {
-    font-size: 22px;
+    font-size: 24px;
   }
 
   .header-user {
@@ -399,6 +582,13 @@ hr {
 
   .mineral {
     font-size: 14px;
+  }
+
+  .mineral-icon {
+    width: 17px;
+    height: 17px;
+
+    margin-right: 5px;
   }
 
   .site-main {

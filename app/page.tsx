@@ -449,6 +449,34 @@ export default async function HomePage() {
 
 
         /* ========================================
+           투네이션 바로가기
+        ======================================== */
+
+        .toonation-link {
+          background:
+            linear-gradient(
+              145deg,
+              #15131a,
+              #0d1219
+            );
+        }
+
+        .toonation-link:hover {
+          border-color: #ffcc45;
+          background:
+            linear-gradient(
+              145deg,
+              #1d1920,
+              #111720
+            );
+        }
+
+        .toonation-link .quick-name {
+          color: #f3d16b;
+        }
+
+
+        /* ========================================
            출석현황
         ======================================== */
 
@@ -1297,9 +1325,7 @@ export default async function HomePage() {
           <div className="left-column">
 
 
-            {/* ======================================
-               LIVE 채널
-            ====================================== */}
+            {/* LIVE 채널 */}
 
             <section className="home-card">
 
@@ -1344,9 +1370,7 @@ export default async function HomePage() {
             </section>
 
 
-            {/* ======================================
-               최근 쇼츠
-            ====================================== */}
+            {/* 최근 쇼츠 */}
 
             <section className="home-card">
 
@@ -1372,9 +1396,7 @@ export default async function HomePage() {
             </section>
 
 
-            {/* ======================================
-               공지사항
-            ====================================== */}
+            {/* 공지사항 */}
 
             <section className="home-card">
 
@@ -1446,9 +1468,7 @@ export default async function HomePage() {
           <div className="center-column">
 
 
-            {/* ======================================
-               빠른 바로가기 + 출석현황
-            ====================================== */}
+            {/* 빠른 바로가기 + 출석현황 */}
 
             <div className="quick-area">
 
@@ -1473,6 +1493,8 @@ export default async function HomePage() {
                 <div className="quick-links">
 
 
+                  {/* 게시판 */}
+
                   <Link
                     href="/board"
                     className="quick-link"
@@ -1492,6 +1514,8 @@ export default async function HomePage() {
 
                   </Link>
 
+
+                  {/* 랭킹 */}
 
                   <Link
                     href="/ranking"
@@ -1513,6 +1537,8 @@ export default async function HomePage() {
                   </Link>
 
 
+                  {/* 상점 */}
+
                   <Link
                     href="/shop"
                     className="quick-link"
@@ -1533,6 +1559,8 @@ export default async function HomePage() {
                   </Link>
 
 
+                  {/* 게임 */}
+
                   <Link
                     href="/games"
                     className="quick-link"
@@ -1551,6 +1579,32 @@ export default async function HomePage() {
                     </span>
 
                   </Link>
+
+
+                  {/* ========================================
+                     투네이션
+                  ======================================== */}
+
+                  <a
+                    href="https://toon.at/donate/hyeroro"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="quick-link toonation-link"
+                  >
+
+                    <span className="quick-icon">
+                      💰
+                    </span>
+
+                    <span className="quick-name">
+                      투네이션
+                    </span>
+
+                    <span className="quick-sub">
+                      DONATION
+                    </span>
+
+                  </a>
 
 
                 </div>
@@ -1591,10 +1645,13 @@ export default async function HomePage() {
 
 
                   <div className="attendance-number">
+
                     {todayAttendanceCount}
+
                     <span>
                       명 출석
                     </span>
+
                   </div>
 
 
@@ -1693,9 +1750,7 @@ export default async function HomePage() {
             </section>
 
 
-            {/* ======================================
-               미네랄 소개
-            ====================================== */}
+            {/* 미네랄 소개 */}
 
             <section className="home-card mineral-box">
 
@@ -1714,9 +1769,7 @@ export default async function HomePage() {
             </section>
 
 
-            {/* ======================================
-               이용 안내
-            ====================================== */}
+            {/* 이용 안내 */}
 
             <section className="home-card">
 
@@ -1749,6 +1802,7 @@ export default async function HomePage() {
 
             </section>
 
+
           </div>
 
 
@@ -1759,9 +1813,7 @@ export default async function HomePage() {
           <div className="right-column">
 
 
-            {/* ======================================
-               미네랄 랭킹
-            ====================================== */}
+            {/* 미네랄 랭킹 */}
 
             <section className="home-card">
 
@@ -1824,9 +1876,7 @@ export default async function HomePage() {
             </section>
 
 
-            {/* ======================================
-               미니게임
-            ====================================== */}
+            {/* 미니게임 */}
 
             <section className="home-card">
 
@@ -1878,9 +1928,7 @@ export default async function HomePage() {
             </section>
 
 
-            {/* ======================================
-               상점
-            ====================================== */}
+            {/* 상점 */}
 
             <section className="home-card">
 

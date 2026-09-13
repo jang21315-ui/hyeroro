@@ -1,6 +1,12 @@
 import Link from "next/link";
+import { Great_Vibes } from "next/font/google";
 import { createClient } from "@/lib/supabase/server";
 import LogoutButton from "./LogoutButton";
+
+const hyeroroFont = Great_Vibes({
+  weight: "400",
+  subsets: ["latin"],
+});
 
 export default async function Header() {
   const supabase = await createClient();
@@ -27,7 +33,9 @@ export default async function Header() {
 
         {/* 로고 */}
         <Link href="/" className="logo">
-          ⛏️ 혜로로
+          <span className={hyeroroFont.className}>
+            Hyeroro
+          </span>
         </Link>
 
         {/* 메인 메뉴 */}
@@ -62,7 +70,10 @@ export default async function Header() {
             <>
               {/* 미네랄 */}
               <div className="mineral">
-                ⛏️ {profile.minerals.toLocaleString()}
+                <span className="mineral-icon" />
+                <span>
+                  {Number(profile.minerals).toLocaleString()}
+                </span>
               </div>
 
               {/* 닉네임 */}
