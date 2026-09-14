@@ -1,9 +1,24 @@
 ﻿import { NextResponse } from "next/server";
 
-type YouTubeVideo = {
-  id: {
-    videoId: string;
+type ChannelResponse = {
+  items?: {
+    id: string;
+    contentDetails?: {
+      relatedPlaylists?: {
+        uploads?: string;
+      };
+    };
+  }[];
+};
+
+type PlaylistItem = {
+  contentDetails?: {
+    videoId?: string;
   };
+};
+
+type PlaylistResponse = {
+  items?: PlaylistItem[];
 };
 
 type YouTubeVideoDetail = {
@@ -18,6 +33,9 @@ type YouTubeVideoDetail = {
         url: string;
       };
       high?: {
+        url: string;
+      };
+      maxres?: {
         url: string;
       };
     };
@@ -57,26 +75,42 @@ export async function GET() {
       );
     }
 
+    // 1. 혜로로 유튜브 채널 정보 조회
     const channelResponse = await fetch(
       "https://www.googleapis.com/youtube/v3/channels" +
-        "?part=id" +
+        "?part=id,contentDetails" +
         "&forHandle=%40HyeroroTV" +
         "&key=" +
         encodeURIComponent(apiKey),
       {
-        cache: "no-store",
+        next: {
+          revalidate: 300,
+        },
       }
     );
 
     if (!channelResponse.ok) {
+      const errorText = await channelResponse.text();
+
+      console.error(
+        "YouTube 채널 조회 실패:",
+        errorText
+      );
+
       throw new Error("YouTube 채널 조회 실패");
     }
 
-    const channelData = await channelResponse.json();
+    const channelData =
+      (await channelResponse.json()) as ChannelResponse;
 
-    const channelId = channelData.items?.[0]?.id;
+    const channel = channelData.items?.[0];
 
-    if (!channelId) {
+    const channelId = channel?.id;
+
+    const uploadsPlaylistId =
+      channel?.contentDetails?.relatedPlaylists?.uploads;
+
+    if (!channelId || !uploadsPlaylistId) {
       return NextResponse.json(
         {
           videos: [],
@@ -85,33 +119,50 @@ export async function GET() {
       );
     }
 
-    const searchResponse = await fetch(
-      "https://www.googleapis.com/youtube/v3/search" +
-        "?part=snippet" +
-        "&channelId=" +
-        encodeURIComponent(channelId) +
-        "&order=date" +
-        "&type=video" +
-        "&maxResults=20" +
+    // 2. 채널의 업로드 목록 조회
+    // search.list를 사용하지 않아 API 할당량을 크게 줄임
+    const playlistResponse = await fetch(
+      "https://www.googleapis.com/youtube/v3/playlistItems" +
+        "?part=contentDetails" +
+        "&playlistId=" +
+        encodeURIComponent(uploadsPlaylistId) +
+        "&maxResults=50" +
         "&key=" +
         encodeURIComponent(apiKey),
       {
-        cache: "no-store",
+        next: {
+          revalidate: 300,
+        },
       }
     );
 
-    if (!searchResponse.ok) {
-      throw new Error("YouTube 영상 목록 조회 실패");
+    if (!playlistResponse.ok) {
+      const errorText = await playlistResponse.text();
+
+      console.error(
+        "YouTube 업로드 목록 조회 실패:",
+        errorText
+      );
+
+      throw new Error(
+        "YouTube 업로드 목록 조회 실패"
+      );
     }
 
-    const searchData = await searchResponse.json();
+    const playlistData =
+      (await playlistResponse.json()) as PlaylistResponse;
 
-    const videoIds = (
-      searchData.items as YouTubeVideo[] | undefined
-    )
-      ?.map((item) => item.id?.videoId)
-      .filter(Boolean)
-      .join(",");
+    const videoIds =
+      playlistData.items
+        ?.map(
+          (item) =>
+            item.contentDetails?.videoId
+        )
+        .filter(
+          (id): id is string =>
+            Boolean(id)
+        )
+        .join(",");
 
     if (!videoIds) {
       return NextResponse.json(
@@ -122,6 +173,7 @@ export async function GET() {
       );
     }
 
+    // 3. 영상 상세정보 조회
     const detailsResponse = await fetch(
       "https://www.googleapis.com/youtube/v3/videos" +
         "?part=snippet,contentDetails" +
@@ -130,46 +182,82 @@ export async function GET() {
         "&key=" +
         encodeURIComponent(apiKey),
       {
-        cache: "no-store",
+        next: {
+          revalidate: 300,
+        },
       }
     );
 
     if (!detailsResponse.ok) {
-      throw new Error("YouTube 영상 상세정보 조회 실패");
+      const errorText = await detailsResponse.text();
+
+      console.error(
+        "YouTube 영상 상세정보 조회 실패:",
+        errorText
+      );
+
+      throw new Error(
+        "YouTube 영상 상세정보 조회 실패"
+      );
     }
 
-    const detailsData = await detailsResponse.json();
+    const detailsData =
+      (await detailsResponse.json()) as {
+        items?: YouTubeVideoDetail[];
+      };
 
     const videos =
-      (detailsData.items as YouTubeVideoDetail[] | undefined)
+      detailsData.items
         ?.filter((video) => {
           const duration = parseDuration(
             video.contentDetails?.duration ?? ""
           );
 
+          const title =
+            video.snippet?.title ?? "";
+
+          const description =
+            video.snippet?.description ?? "";
+
           const text = (
-            (video.snippet?.title ?? "") +
+            title +
             " " +
-            (video.snippet?.description ?? "")
+            description
           ).toLowerCase();
 
-          return duration <= 180 && text.includes("#shorts");
+          // Shorts 조건
+          // 3분 이하이면서 #shorts가 포함된 영상
+          return (
+            duration > 0 &&
+            duration <= 180 &&
+            text.includes("#shorts")
+          );
         })
         .sort(
           (a, b) =>
-            new Date(b.snippet.publishedAt).getTime() -
-            new Date(a.snippet.publishedAt).getTime()
+            new Date(
+              b.snippet.publishedAt
+            ).getTime() -
+            new Date(
+              a.snippet.publishedAt
+            ).getTime()
         )
         .slice(0, 6)
         .map((video) => ({
           id: video.id,
           title: video.snippet.title,
           thumbnail:
-            video.snippet.thumbnails?.high?.url ??
-            video.snippet.thumbnails?.medium?.url ??
+            video.snippet.thumbnails?.maxres
+              ?.url ??
+            video.snippet.thumbnails?.high
+              ?.url ??
+            video.snippet.thumbnails?.medium
+              ?.url ??
             "",
-          publishedAt: video.snippet.publishedAt,
-          channelTitle: video.snippet.channelTitle,
+          publishedAt:
+            video.snippet.publishedAt,
+          channelTitle:
+            video.snippet.channelTitle,
           url:
             "https://www.youtube.com/shorts/" +
             video.id,
