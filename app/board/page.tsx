@@ -26,6 +26,9 @@ export default async function Board({
 
   /*
    * 게시글 전체 조회
+   *
+   * 고정글(is_pinned)을 먼저 보여주고
+   * 그 안에서는 최신 글 순서로 표시
    */
   let query = supabase
     .from("posts")
@@ -34,12 +37,16 @@ export default async function Board({
         id,
         title,
         created_at,
+        is_pinned,
         profiles(nickname)
       `,
       {
         count: "exact",
       }
     )
+    .order("is_pinned", {
+      ascending: false,
+    })
     .order("created_at", {
       ascending: false,
     });
@@ -115,28 +122,21 @@ export default async function Board({
           display: flex;
           align-items: flex-end;
           justify-content: space-between;
-
           gap: 20px;
-
           margin-bottom: 20px;
         }
 
         .board-heading {
           margin: 0;
-
           color: #fff;
-
           font-size: 28px;
           font-weight: 900;
-
           letter-spacing: -1px;
         }
 
         .board-description {
           margin: 8px 0 0;
-
           color: #737c88;
-
           font-size: 13px;
         }
 
@@ -144,21 +144,14 @@ export default async function Board({
           display: inline-flex;
           align-items: center;
           justify-content: center;
-
           height: 40px;
-
           padding: 0 16px;
-
           border-radius: 7px;
-
           background: #d6a928;
           color: #111;
-
           font-size: 12px;
           font-weight: 900;
-
           text-decoration: none;
-
           white-space: nowrap;
         }
 
@@ -172,34 +165,25 @@ export default async function Board({
 
         .search-box {
           display: flex;
-
           gap: 8px;
-
           margin-bottom: 14px;
         }
 
         .search-input {
           flex: 1;
-
           height: 42px;
-
           padding: 0 13px;
-
           border: 1px solid #303743;
           border-radius: 7px;
-
           background: #0d1219;
           color: #fff;
-
           font-family: inherit;
           font-size: 13px;
-
           outline: none;
         }
 
         .search-input:focus {
           border-color: #d6a928;
-
           box-shadow:
             0 0 0 2px
             rgba(214, 169, 40, 0.1);
@@ -211,17 +195,13 @@ export default async function Board({
 
         .search-button {
           min-width: 70px;
-
           border: 1px solid #d6a928;
           border-radius: 7px;
-
           background: #d6a928;
           color: #111;
-
           font-family: inherit;
           font-size: 12px;
           font-weight: 900;
-
           cursor: pointer;
         }
 
@@ -235,12 +215,9 @@ export default async function Board({
 
         .board-card {
           overflow: hidden;
-
           border: 1px solid #2a3039;
           border-radius: 12px;
-
           background: #0b0f15;
-
           box-shadow:
             0 10px 35px
             rgba(0, 0, 0, 0.25);
@@ -250,24 +227,19 @@ export default async function Board({
           display: flex;
           align-items: center;
           justify-content: space-between;
-
           padding: 15px 18px;
-
           border-bottom: 1px solid #252b34;
-
           background: #0e131a;
         }
 
         .board-name {
           color: #dfe3e8;
-
           font-size: 12px;
           font-weight: 800;
         }
 
         .board-count {
           color: #626b76;
-
           font-size: 11px;
         }
 
@@ -277,19 +249,16 @@ export default async function Board({
 
         .post-row {
           display: grid;
-
           grid-template-columns:
             minmax(0, 1fr)
             130px;
 
           min-height: 68px;
-
           padding: 12px 18px;
 
           border-bottom: 1px solid #202630;
 
           color: inherit;
-
           text-decoration: none;
 
           transition:
@@ -304,6 +273,17 @@ export default async function Board({
           background: #111720;
         }
 
+        /* 고정글 */
+
+        .post-row.pinned {
+          background: #11140f;
+          border-bottom-color: #3a351f;
+        }
+
+        .post-row.pinned:hover {
+          background: #171a12;
+        }
+
         .post-main {
           min-width: 0;
 
@@ -315,6 +295,9 @@ export default async function Board({
         }
 
         .post-title {
+          display: flex;
+          align-items: center;
+          min-width: 0;
           overflow: hidden;
 
           color: #f4f5f6;
@@ -326,9 +309,13 @@ export default async function Board({
           text-overflow: ellipsis;
         }
 
+        .pinned .post-title {
+          color: #f1d36b;
+          font-weight: 800;
+        }
+
         .post-author {
           color: #626b76;
-
           font-size: 11px;
         }
 
@@ -338,8 +325,32 @@ export default async function Board({
           justify-content: flex-end;
 
           color: #626b76;
-
           font-size: 11px;
+        }
+
+        /* =========================
+           고정 배지
+        ========================= */
+
+        .pin-badge {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+
+          flex-shrink: 0;
+
+          margin-right: 7px;
+          padding: 3px 6px;
+
+          border: 1px solid #5b4b1d;
+          border-radius: 4px;
+
+          background: #241f10;
+          color: #d6a928;
+
+          font-size: 9px;
+          font-weight: 900;
+          line-height: 1;
         }
 
         /* =========================
@@ -348,11 +359,8 @@ export default async function Board({
 
         .empty-board {
           padding: 70px 20px;
-
           color: #626b76;
-
           text-align: center;
-
           font-size: 13px;
         }
 
@@ -362,12 +370,10 @@ export default async function Board({
 
         .pagination {
           display: flex;
-
           align-items: center;
           justify-content: center;
 
           gap: 6px;
-
           padding: 20px;
         }
 
@@ -400,14 +406,12 @@ export default async function Board({
 
         .page-button.active {
           border-color: #d6a928;
-
           background: #d6a928;
           color: #111;
         }
 
         .page-button.disabled {
           opacity: 0.35;
-
           pointer-events: none;
         }
 
@@ -422,7 +426,6 @@ export default async function Board({
           margin-top: 16px;
 
           color: #626b76;
-
           font-size: 11px;
         }
 
@@ -454,7 +457,6 @@ export default async function Board({
 
           .board-bottom {
             flex-direction: column;
-
             gap: 6px;
           }
 
@@ -464,7 +466,6 @@ export default async function Board({
           }
         }
       `}</style>
-
 
       {/* =========================
           헤더
@@ -493,7 +494,6 @@ export default async function Board({
 
       </div>
 
-
       {/* =========================
           검색
       ========================= */}
@@ -521,7 +521,6 @@ export default async function Board({
 
       </form>
 
-
       {/* =========================
           게시판
       ========================= */}
@@ -541,7 +540,6 @@ export default async function Board({
           </span>
 
         </div>
-
 
         {error ? (
 
@@ -567,13 +565,25 @@ export default async function Board({
             <Link
               href={`/board/${post.id}`}
               key={post.id}
-              className="post-row"
+              className={`post-row ${
+                post.is_pinned
+                  ? "pinned"
+                  : ""
+              }`}
             >
 
               <div className="post-main">
 
                 <span className="post-title">
+
+                  {post.is_pinned && (
+                    <span className="pin-badge">
+                      📌 고정
+                    </span>
+                  )}
+
                   {post.title}
+
                 </span>
 
                 <span className="post-author">
@@ -596,7 +606,6 @@ export default async function Board({
           ))
 
         )}
-
 
         {/* =========================
             페이지네이션
@@ -623,7 +632,6 @@ export default async function Board({
               ‹
             </Link>
 
-
             {Array.from(
               {
                 length: totalPages,
@@ -645,7 +653,6 @@ export default async function Board({
               </Link>
 
             ))}
-
 
             <Link
               href={
@@ -669,7 +676,6 @@ export default async function Board({
         )}
 
       </div>
-
 
       {/* =========================
           하단
