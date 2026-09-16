@@ -25,6 +25,9 @@ body {
     Arial,
     "Noto Sans KR",
     sans-serif;
+
+  font-size: 16px;
+  line-height: 1.6;
 }
 
 /* ========================================
@@ -69,7 +72,7 @@ a {
 
 .header-inner {
   max-width: 1200px;
-  min-height: 70px;
+  min-height: 74px;
 
   margin: 0 auto;
   padding: 0 24px;
@@ -91,7 +94,7 @@ a {
 
   color: #ffffff;
 
-  font-size: 30px;
+  font-size: 32px;
   line-height: 1;
 
   white-space: nowrap;
@@ -126,7 +129,7 @@ a {
   display: flex;
   align-items: center;
 
-  gap: 28px;
+  gap: 30px;
 
   flex: 1;
 }
@@ -136,7 +139,7 @@ a {
 
   color: #aeb4bd;
 
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 600;
 
   transition:
@@ -159,7 +162,7 @@ a {
   display: flex;
   align-items: center;
 
-  gap: 18px;
+  gap: 20px;
 
   white-space: nowrap;
 }
@@ -175,7 +178,7 @@ a {
 
   color: #dffaff;
 
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 700;
 
   white-space: nowrap;
@@ -191,8 +194,8 @@ a {
 
   display: inline-block;
 
-  width: 19px;
-  height: 19px;
+  width: 20px;
+  height: 20px;
 
   margin-right: 7px;
 
@@ -293,7 +296,7 @@ a {
   color: #ffffff;
 
   font-weight: 600;
-  font-size: 14px;
+  font-size: 15px;
 
   transition:
     color 0.2s ease;
@@ -344,9 +347,9 @@ a {
   align-items: center;
   justify-content: center;
 
-  min-height: 40px;
+  min-height: 42px;
 
-  padding: 0 16px;
+  padding: 0 18px;
 
   border: 1px solid #d6a928;
   border-radius: 8px;
@@ -354,7 +357,7 @@ a {
   background: #d6a928;
   color: #111111;
 
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 700;
 
   cursor: pointer;
@@ -402,6 +405,8 @@ input,
 textarea,
 select {
   font-family: inherit;
+
+  font-size: 16px;
 }
 
 input,
@@ -488,13 +493,13 @@ hr {
 .footer-inner strong {
   color: #ffffff;
 
-  font-size: 18px;
+  font-size: 19px;
 }
 
 .footer-inner p {
   margin: 8px 0;
 
-  font-size: 13px;
+  font-size: 14px;
 }
 
 
@@ -618,7 +623,7 @@ hr {
 
   color: #ffffff;
 
-  font-size: 9px;
+  font-size: 10px;
   font-weight: 800;
 
   letter-spacing: 0.3px;
@@ -635,8 +640,8 @@ hr {
 
   transform: translate(-50%, -50%);
 
-  width: 38px;
-  height: 38px;
+  width: 40px;
+  height: 40px;
 
   display: flex;
   align-items: center;
@@ -648,7 +653,7 @@ hr {
 
   color: #ffffff;
 
-  font-size: 15px;
+  font-size: 16px;
 
   padding-left: 2px;
 
@@ -659,7 +664,7 @@ hr {
 /* 쇼츠 정보 */
 
 .youtube-short-info {
-  padding: 9px 9px 10px;
+  padding: 10px 10px 11px;
 }
 
 .youtube-short-title {
@@ -672,8 +677,8 @@ hr {
 
   color: #f5f5f5;
 
-  font-size: 12px;
-  line-height: 1.45;
+  font-size: 13px;
+  line-height: 1.5;
 
   font-weight: 600;
 }
@@ -683,7 +688,7 @@ hr {
 
   color: #858d98;
 
-  font-size: 10px;
+  font-size: 11px;
 
   white-space: nowrap;
   overflow: hidden;
@@ -704,7 +709,7 @@ hr {
 
   color: #777f8b;
 
-  font-size: 13px;
+  font-size: 14px;
 }
 
 
@@ -728,7 +733,7 @@ hr {
 
     width: 100%;
 
-    gap: 18px;
+    gap: 20px;
 
     overflow-x: auto;
 
@@ -737,6 +742,8 @@ hr {
 
   .main-nav a {
     white-space: nowrap;
+
+    font-size: 16px;
   }
 
   .header-user {
@@ -767,23 +774,23 @@ hr {
   }
 
   .youtube-short-card {
-    flex: 0 0 125px;
+    flex: 0 0 135px;
 
-    width: 125px;
+    width: 135px;
 
     scroll-snap-align: start;
   }
 
   .youtube-short-info {
-    padding: 8px;
+    padding: 9px;
   }
 
   .youtube-short-title {
-    font-size: 11px;
+    font-size: 12px;
   }
 
   .youtube-short-channel {
-    font-size: 9px;
+    font-size: 10px;
   }
 }
 
@@ -798,7 +805,7 @@ hr {
   }
 
   .logo {
-    font-size: 24px;
+    font-size: 26px;
   }
 
   .header-user {
@@ -806,14 +813,18 @@ hr {
   }
 
   .mineral {
-    font-size: 14px;
+    font-size: 15px;
   }
 
   .mineral-icon {
-    width: 17px;
-    height: 17px;
+    width: 18px;
+    height: 18px;
 
     margin-right: 5px;
+  }
+
+  .user-name {
+    font-size: 14px;
   }
 
   .site-main {
@@ -830,9 +841,9 @@ hr {
   }
 
   .youtube-short-card {
-    flex: 0 0 115px;
+    flex: 0 0 125px;
 
-    width: 115px;
+    width: 125px;
   }
 
   .youtube-short-badge {
@@ -841,13 +852,21 @@ hr {
 
     padding: 3px 5px;
 
-    font-size: 8px;
+    font-size: 9px;
   }
 
   .youtube-short-play {
-    width: 34px;
-    height: 34px;
+    width: 36px;
+    height: 36px;
 
-    font-size: 13px;
+    font-size: 14px;
+  }
+
+  .youtube-short-title {
+    font-size: 12px;
+  }
+
+  .youtube-short-channel {
+    font-size: 10px;
   }
 }
