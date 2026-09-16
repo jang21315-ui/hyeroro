@@ -4,11 +4,12 @@ import YouTubeLive from "@/components/YouTubeLive";
 import YouTubeShorts from "@/components/YouTubeShorts";
 
 type Post = {
-  id: number;
+  id: string;
   title: string;
   created_at: string;
   view_count: number | null;
   user_id: string;
+  is_pinned: boolean;
 };
 
 type Profile = {
@@ -43,13 +44,18 @@ export default async function HomePage() {
   ] = await Promise.all([
     supabase
       .from("posts")
-      .select("id, title, created_at, view_count, user_id")
+      .select(
+        "id, title, created_at, view_count, user_id, is_pinned"
+      )
+      .order("is_pinned", { ascending: false })
       .order("created_at", { ascending: false })
       .limit(5),
 
     supabase
       .from("posts")
-      .select("id, title, created_at, view_count, user_id")
+      .select(
+        "id, title, created_at, view_count, user_id, is_pinned"
+      )
       .order("view_count", { ascending: false })
       .limit(5),
 
@@ -83,7 +89,9 @@ export default async function HomePage() {
 
   const allUserIds = [
     ...new Set(
-      [...recentPosts, ...popularPosts].map((post) => post.user_id)
+      [...recentPosts, ...popularPosts].map(
+        (post) => post.user_id
+      )
     ),
   ];
 
@@ -99,8 +107,9 @@ export default async function HomePage() {
   }
 
   const getNickname = (userId: string) =>
-    postProfiles.find((profile) => profile.id === userId)?.nickname ??
-    "익명";
+    postProfiles.find(
+      (profile) => profile.id === userId
+    )?.nickname ?? "익명";
 
   const formatDate = (date: string) =>
     new Date(date).toLocaleDateString("ko-KR", {
@@ -184,10 +193,6 @@ export default async function HomePage() {
           color: #d6a928;
         }
 
-        /*
-         * TOP
-         */
-
         .top-layout {
           display: grid;
           grid-template-columns: minmax(0, 1.65fr) minmax(300px, 1fr);
@@ -212,10 +217,6 @@ export default async function HomePage() {
         .shorts-content {
           padding: 10px 12px 12px;
         }
-
-        /*
-         * SHORTCUT
-         */
 
         .shortcut-section {
           margin-top: 10px;
@@ -258,14 +259,13 @@ export default async function HomePage() {
           font-weight: 800;
         }
 
-        /*
-         * MAIN
-         */
-
         .portal-grid {
           margin-top: 10px;
           display: grid;
-          grid-template-columns: minmax(0, 1.15fr) minmax(0, 1.15fr) minmax(250px, 0.8fr);
+          grid-template-columns:
+            minmax(0, 1.15fr)
+            minmax(0, 1.15fr)
+            minmax(250px, 0.8fr);
           gap: 10px;
           align-items: start;
         }
@@ -277,10 +277,6 @@ export default async function HomePage() {
         .portal-section {
           margin-bottom: 10px;
         }
-
-        /*
-         * ATTENDANCE
-         */
 
         .attendance-box {
           padding: 14px;
@@ -360,10 +356,6 @@ export default async function HomePage() {
           color: #d6a928;
         }
 
-        /*
-         * GAME
-         */
-
         .game-list {
           padding: 5px 10px 8px;
         }
@@ -412,10 +404,6 @@ export default async function HomePage() {
           color: #626d78;
           font-size: 11px;
         }
-
-        /*
-         * RANKING
-         */
 
         .ranking-tabs {
           display: flex;
@@ -492,10 +480,6 @@ export default async function HomePage() {
           color: #d6a928;
         }
 
-        /*
-         * STOCK
-         */
-
         .stock-list {
           padding: 3px 11px 7px;
         }
@@ -523,10 +507,6 @@ export default async function HomePage() {
           color: #59646f;
           font-size: 8px;
         }
-
-        /*
-         * SHOP
-         */
 
         .shop-grid {
           display: grid;
@@ -576,10 +556,6 @@ export default async function HomePage() {
           font-weight: 900;
         }
 
-        /*
-         * POST LIST
-         */
-
         .post-list {
           padding: 2px 11px 7px;
         }
@@ -627,9 +603,12 @@ export default async function HomePage() {
           font-size: 8px;
         }
 
-        /*
-         * NOTICE
-         */
+        .pin-badge {
+          display: inline-block;
+          margin-right: 4px;
+          color: #d6a928;
+          font-size: 9px;
+        }
 
         .notice-list {
           padding: 2px 11px 7px;
@@ -666,20 +645,12 @@ export default async function HomePage() {
           font-size: 9px;
         }
 
-        /*
-         * EMPTY
-         */
-
         .empty {
           padding: 20px 10px;
           text-align: center;
           color: #59646f;
           font-size: 9px;
         }
-
-        /*
-         * MY ACTIVITY
-         */
 
         .activity-grid {
           display: grid;
@@ -703,10 +674,6 @@ export default async function HomePage() {
           border-color: #b89225;
           color: #d6a928;
         }
-
-        /*
-         * MINERAL
-         */
 
         .mineral-box {
           padding: 14px;
@@ -743,10 +710,6 @@ export default async function HomePage() {
           color: #d6a928;
         }
 
-        /*
-         * PLACEHOLDER
-         */
-
         .placeholder {
           padding: 12px;
         }
@@ -759,10 +722,6 @@ export default async function HomePage() {
           text-align: center;
           font-size: 9px;
         }
-
-        /*
-         * LOTTO
-         */
 
         .lotto-box {
           padding: 14px;
@@ -798,10 +757,6 @@ export default async function HomePage() {
         .lotto-row b {
           color: #cbd1d6;
         }
-
-        /*
-         * QUEST
-         */
 
         .quest-list {
           padding: 4px 10px 8px;
@@ -844,10 +799,6 @@ export default async function HomePage() {
           color: #d6a928;
           font-size: 8px;
         }
-
-        /*
-         * RESPONSIVE
-         */
 
         @media (max-width: 950px) {
           .portal-grid {
@@ -930,6 +881,7 @@ export default async function HomePage() {
         <div className="top-layout">
 
           <section className="home-section live-section">
+
             <div className="live-heading">
               🔴 혜로로 LIVE
             </div>
@@ -937,10 +889,13 @@ export default async function HomePage() {
             <div className="live-content">
               <YouTubeLive />
             </div>
+
           </section>
 
           <section className="home-section">
+
             <div className="section-title">
+
               <h2>최근 쇼츠</h2>
 
               <a
@@ -951,11 +906,13 @@ export default async function HomePage() {
               >
                 전체 보기 〉
               </a>
+
             </div>
 
             <div className="shorts-content">
               <YouTubeShorts />
             </div>
+
           </section>
 
         </div>
@@ -970,14 +927,24 @@ export default async function HomePage() {
 
           <div className="shortcut-grid">
 
-            <Link href="/attendance" className="shortcut">
+            <Link
+              href="/attendance"
+              className="shortcut"
+            >
               <span className="shortcut-icon">📅</span>
-              <span className="shortcut-name">방송일정</span>
+              <span className="shortcut-name">
+                방송일정
+              </span>
             </Link>
 
-            <Link href="/board" className="shortcut">
+            <Link
+              href="/board"
+              className="shortcut"
+            >
               <span className="shortcut-icon">📢</span>
-              <span className="shortcut-name">방송미션</span>
+              <span className="shortcut-name">
+                방송미션
+              </span>
             </Link>
 
             <a
@@ -987,7 +954,9 @@ export default async function HomePage() {
               className="shortcut"
             >
               <span className="shortcut-icon">📸</span>
-              <span className="shortcut-name">인스타</span>
+              <span className="shortcut-name">
+                인스타
+              </span>
             </a>
 
             <a
@@ -997,7 +966,9 @@ export default async function HomePage() {
               className="shortcut"
             >
               <span className="shortcut-icon">🎵</span>
-              <span className="shortcut-name">틱톡</span>
+              <span className="shortcut-name">
+                틱톡
+              </span>
             </a>
 
             <a
@@ -1007,20 +978,33 @@ export default async function HomePage() {
               className="shortcut"
             >
               <span className="shortcut-icon">💰</span>
-              <span className="shortcut-name">후원</span>
+              <span className="shortcut-name">
+                후원
+              </span>
             </a>
 
-            <Link href="/shop" className="shortcut">
+            <Link
+              href="/shop"
+              className="shortcut"
+            >
               <span className="shortcut-icon">🛒</span>
-              <span className="shortcut-name">상점</span>
+              <span className="shortcut-name">
+                상점
+              </span>
             </Link>
 
-            <Link href="/board" className="shortcut">
+            <Link
+              href="/board"
+              className="shortcut"
+            >
               <span className="shortcut-icon">💬</span>
-              <span className="shortcut-name">게시판</span>
+              <span className="shortcut-name">
+                게시판
+              </span>
             </Link>
 
           </div>
+
         </section>
 
         {/* PORTAL */}
@@ -1036,6 +1020,7 @@ export default async function HomePage() {
             <section className="home-section portal-section">
 
               <div className="section-title">
+
                 <h2>출석 현황</h2>
 
                 <Link
@@ -1044,6 +1029,7 @@ export default async function HomePage() {
                 >
                   출석체크 〉
                 </Link>
+
               </div>
 
               <div className="attendance-box">
@@ -1057,6 +1043,7 @@ export default async function HomePage() {
                     </div>
 
                     <div>
+
                       <div className="attendance-label">
                         오늘 출석
                       </div>
@@ -1064,6 +1051,7 @@ export default async function HomePage() {
                       <div className="attendance-desc">
                         출석하면 ⛏️ 미네랄 +10
                       </div>
+
                     </div>
 
                   </div>
@@ -1102,6 +1090,7 @@ export default async function HomePage() {
             <section className="home-section portal-section">
 
               <div className="section-title">
+
                 <h2>게임 현황</h2>
 
                 <Link
@@ -1110,11 +1099,15 @@ export default async function HomePage() {
                 >
                   전체 게임 바로가기 〉
                 </Link>
+
               </div>
 
               <div className="game-list">
 
-                <Link href="/games" className="game-item">
+                <Link
+                  href="/games"
+                  className="game-item"
+                >
 
                   <div className="game-icon">
                     🎲
@@ -1138,7 +1131,10 @@ export default async function HomePage() {
 
                 </Link>
 
-                <Link href="/games" className="game-item">
+                <Link
+                  href="/games"
+                  className="game-item"
+                >
 
                   <div className="game-icon">
                     🪜
@@ -1162,7 +1158,10 @@ export default async function HomePage() {
 
                 </Link>
 
-                <Link href="/games" className="game-item">
+                <Link
+                  href="/games"
+                  className="game-item"
+                >
 
                   <div className="game-icon">
                     📊
@@ -1581,7 +1580,15 @@ export default async function HomePage() {
                           href={`/board/${post.id}`}
                           className="post-title"
                         >
+
+                          {post.is_pinned && (
+                            <span className="pin-badge">
+                              📌
+                            </span>
+                          )}
+
                           {post.title}
+
                         </Link>
 
                         <div className="post-meta">
@@ -1646,7 +1653,15 @@ export default async function HomePage() {
                           href={`/board/${post.id}`}
                           className="post-title"
                         >
+
+                          {post.is_pinned && (
+                            <span className="pin-badge">
+                              📌
+                            </span>
+                          )}
+
                           {post.title}
+
                         </Link>
 
                         <div className="post-meta">
@@ -1922,7 +1937,7 @@ export default async function HomePage() {
 
             </section>
 
-            {/* 미네랄 로또 대응 */}
+            {/* 미네랄 로또 */}
 
             <section className="home-section portal-section">
 
